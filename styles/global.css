@@ -1,0 +1,158 @@
+.root {
+    max-height: 900px;
+    max-width: 1440px;
+    margin-left: 60px;
+    margin-right: 60px;
+    margin-top: 101px;
+    margin-bottom: 204px;
+    background: #F7F7F8;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    border: 0px solid #EAEBED;
+}
+
+body {
+    background-color: grey;
+    font-family: sans-serif;
+    margin: 0;
+}
+
+
+
+
+
+
+.flex_main {
+    display: flex;
+    flex-direction: row;
+    gap: 28px;
+    margin-left: 162px;
+    margin-top: 40px;
+    margin-right: 162px;
+}
+
+
+
+
+
+.filter {
+    display: flex;
+    flex: 1 1 30%;
+    flex-wrap: wrap;
+    width: 315px;
+    height: 360px;
+    background: #FFFFFF;
+    border-radius: 12px;
+    border: 1px solid #EAEBED;
+    flex-direction: column;
+    justify-content: space-around;
+
+}
+
+.fil {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    flex: 1 1 20;
+    padding: 10px;
+
+}
+
+.otrasl {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    flex: 1;
+    padding: 10px;
+    gap: 10px;
+}
+
+.selec {
+    padding: 10px;
+    height: 42px;
+    border: 1px solid #D5D6DC;
+    border-radius: 8px;
+}
+
+
+.oklad {
+    display: flex;
+    justify-content: flex-start;
+    flex: 1;
+    padding: 10px;
+    flex-direction: column;
+    /* gap: 10px; */
+
+}
+
+
+
+.button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: 1;
+    padding: 10px;
+    /* width: 275px; */
+    /* height: 40px; */
+    /* border-radius: 8px; */
+    /* margin: 4px 20px; */
+    /* background-color: #5E96FC; */
+    /* border: solid #5E96FC; */
+}
+
+
+.main_info {
+    display: flex;
+    flex: 1 1 70%;
+    height: 660px;
+    width: 773px;
+    flex-direction: column;
+    flex-wrap: wrap;
+
+    /* gap: 16px; */
+
+}
+
+/* .main_search {
+    display: flex;
+    flex: 1;
+    max-height: 48px;
+    width: 773px;
+    flex-direction: row;
+    justify-content: space-around;
+    border: 1px solid #D5D6DC;
+    border-radius: 8px;
+} */
+
+
+
+.main_info_item {
+    display: flex;
+    flex: 1 1;
+    max-height: 137px;
+    flex-wrap: wrap;
+    max-width: 100%;
+    flex-wrap: wrap;
+    flex-direction: column;
+    padding: 10px;
+    background: #FFFFFF;
+    border-radius: 12px;
+    border: 1px solid #EAEBED;
+    box-sizing: border-box;
+
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    justify-content: center;
+    max-height: 660px;
+    max-width: 773px;
+    flex-wrap: wrap;
+    max-width: 100%;
+    flex-wrap: wrap;
+    gap: 16px;
+}
