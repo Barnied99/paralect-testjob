@@ -3,14 +3,53 @@ import Link from "next/link";
 import { v4 as uuidv4 } from 'uuid'
 import { useState } from "react";
 import { useRouter } from "next/router";
-import { Flex, Button, NumberInput, TextInput, Loader, MultiSelect, Pagination, Text } from "@mantine/core";
+import { Flex, Button, NumberInput, TextInput, Loader, MultiSelect, Pagination, Text, ActionIcon } from "@mantine/core";
 import { IconChevronDown } from '@tabler/icons-react';
 import styles from "../styles/Footer.module.css"
+import { IconSearch } from "@tabler/icons-react";
+import { IconMapPin } from "@tabler/icons-react";
+import Image from "next/image";
 
 
 
 const Home = ({ data, dataselect }) => {
 
+  const [star, setStar] = useState(false)
+  const [starId, setStarId] = useState('')
+
+  const starClick = (event) => {
+    event.preventDefault();
+    setStar(!star)
+    setStarId()
+    console.log(event.currentTarget.value)
+    // console.log(event.currentTarget)
+    // const starid = event.currentTarget
+    // console.log(starid)
+    // if (star == "Star.svg") {
+    //   setStar("Star 2.svg");
+    // } else {
+    //   setStar("Star.svg");
+
+    // }
+  }
+
+
+
+  const fixpaymentto = (el) => {
+    return el == 0 ? '' : `${el} `
+  }
+
+  const fixpaymentfrom = (el) => {
+    return el == 0 ? '' : `${el} -`
+  }
+
+  function getKeyByValue(obj, value) {
+    for (let key in obj) {
+      if (obj[key] === value) {
+        return key;
+      }
+    }
+  }
 
   const resetButton = () => {
     setNumberDataFrom(0)
@@ -18,15 +57,12 @@ const Home = ({ data, dataselect }) => {
     setSelect([])
   }
 
+
+
   // поиск отрасли
 
 
-  // const masselectkey = dataselect.reduce((acc, el, i) => {
-  //   return {
-  //     ...acc,
-  //     [i]: el.key
-  //   }
-  // })
+
 
 
   const masselectTitle = dataselect.reduce((acc, el, i) => {
@@ -37,13 +73,20 @@ const Home = ({ data, dataselect }) => {
   }, [])
 
   const selectedValues = Object.values(masselectTitle)
-  const selectedKey = Object.keys(masselectTitle)
-  // console.log(selectedKey)
-  // console.log(selectedValues)
-  const [value, setValue] = useState(' ');
 
+
+
+
+  const [value, setValue] = useState("");
+  function handlesetSelect(value) {
+    setSelect(value)
+    const strvalue = value.toString()
+    const getstrvalue = getKeyByValue(masselectTitle, strvalue)
+    setSelectId(getstrvalue)
+  }
   const [selectData, setSelect] = useState([]);
-  // console.log(selectData)
+  const [selectDataId, setSelectId] = useState([]);
+
   // 
 
 
@@ -57,16 +100,16 @@ const Home = ({ data, dataselect }) => {
 
   const submitFilter = (e) => {
     e.preventDefault()
+
     if (selectData || value) {
+
       router.push({
-        query: `keyword=${value}&catalogues=${selectData}`
+        query: `keyword=${value}&catalogues=${selectDataId}&payment_from=${numberdatafrom}&payment_to=${numberdatabefore}`
       })
     }
 
   }
 
-
-  // 
 
 
 
@@ -85,7 +128,7 @@ const Home = ({ data, dataselect }) => {
 
 
   const pagesCount = Math.ceil(items.length / pageSize);
-  if (pagesCount === 1) return null;
+  // if (pagesCount === 1) return null;
 
   const paginate = (items, currentPage, pagesizemain) => {
     const startIndex = (currentPage - 1) * pagesizemain;
@@ -137,7 +180,6 @@ const Home = ({ data, dataselect }) => {
                       c="dimmed"
                       compact>
                       сбросить все x</Button>
-                    {/* <span>Сбросить все x</span> */}
                   </div>
 
                   <form onSubmit={submitFilter}
@@ -148,9 +190,9 @@ const Home = ({ data, dataselect }) => {
                         placeholder="введите отрасль"
                         rightSection={<IconChevronDown size="1rem" />}
                         rightSectionWidth={40}
-                        data={selectedValues}
+                        data={Object.values(masselectTitle)}
                         value={selectData}
-                        onChange={setSelect}
+                        onChange={(value) => handlesetSelect(value)}
                         maxDropdownHeight={150}
                       />
                     </div>
@@ -163,8 +205,8 @@ const Home = ({ data, dataselect }) => {
                       >
                         <NumberInput
                           label="Оклад"
-                          precision={1}
-                          min={-1}
+                          precision={0}
+                          min={0}
                           step={1000}
                           max={100000000}
                           placeholder="От"
@@ -172,8 +214,8 @@ const Home = ({ data, dataselect }) => {
                           onChange={setNumberDataFrom}
                         />
                         <NumberInput
-                          precision={1}
-                          min={-1}
+                          precision={0}
+                          min={0}
                           step={1000}
                           max={100000000}
                           placeholder="До"
@@ -201,11 +243,12 @@ const Home = ({ data, dataselect }) => {
                 <form onSubmit={submitHandler}
                 >
                   <TextInput
+
+                    placeholder="Введите название вакансии" icon={<IconSearch size="0.8rem" />}
                     size="md"
                     value={value}
                     onChange={(event) => setValue(event.currentTarget.value)}
                     radius="md"
-                    placeholder="Введите название вакансии"
                     rightSection={
                       <Button
                         right={22}
@@ -216,18 +259,35 @@ const Home = ({ data, dataselect }) => {
                 </form>
               </div>
 
-              <div className="container">
+              <div className="container" >
                 {datas.map((el) => (
-                  <Link key={uuidv4()} href={`/${el.id}`} >
-                    <div className="main_info_item" key={uuidv4()} >
-                      <div key={uuidv4()} className="text">{el.profession}</div>
-                      <div key={uuidv4()} className="text">{el.firm_name}</div>
-                      <div key={uuidv4()} className="text">{el.town.title}</div>
-                      <div key={uuidv4()} className="text">{el.type_of_work.title}</div>
-                      <div key={uuidv4()} className="text">{el.payment_to}</div>
-                      <div key={uuidv4()} className="text">{el.payment_from}</div>
+
+                  <Link className="main_info_item" key={uuidv4()} href={`/${el.id}`}  >
+                    <div className="main_info_item1"  >
+                      <Text fz="lg" c="#5E96FC" key={uuidv4()}>{el.profession}</Text>
+                      <Button radius="md" variant="subtle" value={el.id} onClick={(e) => starClick(e)} >
+                        {star ? <Image src="Star 2.svg" width={20} height={20} alt='star' /> : <Image src="Star.svg" width={20} height={20} alt='star2' />}
+
+
+                      </Button>
+
+
                     </div>
+
+                    <div className="content">
+                      <Text fw={600} key={uuidv4()} c="#232134" >з/п {fixpaymentfrom(el.payment_from)}</Text>
+                      <Text fw={600} key={uuidv4()} c="#232134" > {fixpaymentto(el.payment_to)}</Text>
+                      <Text fw={600} key={uuidv4()} c="#232134" >{el.currency}</Text> •
+                      <Text key={uuidv4()} className="text">{el.type_of_work.title}</Text>
+                    </div>
+                    <div className="content">
+                      <IconMapPin color='#ACADB9' size="1.3rem" />
+                      <Text key={uuidv4()} className="text">{el.town.title}</Text>
+                    </div>
+
                   </Link>
+
+
 
                 )
                 )}
@@ -263,8 +323,11 @@ export async function getServerSideProps(ctx) {
 
   const serchkeyword = ctx.query.keyword
   const datafilter = ctx.query.catalogues
-  console.log(serchkeyword)
-  console.log(datafilter)
+  const dataFilterPaymentFrom = ctx.query.payment_from
+  const dataFilterPaymentTo = ctx.query.payment_to
+
+  console.log(dataFilterPaymentFrom)
+  console.log(dataFilterPaymentTo)
 
   const del = await fetch('https://startup-summer-2023-proxy.onrender.com/2.0/oauth2/password/?login=sergei.stralenia@gmail.com&password=paralect123&client_id=2356&client_secret=v3.r.137440105.ffdbab114f92b821eac4e21f485343924a773131.06c3bdbb8446aeb91c35b80c42ff69eb9c457948', {
     method: 'Get',
@@ -278,11 +341,11 @@ export async function getServerSideProps(ctx) {
     },
   })
   const key = await del.json()
+  console.log(key)
 
+  if (serchkeyword !== undefined ?? datafilter) {
 
-  if (serchkeyword !== undefined) {
-
-    const response = await fetch(`https://startup-summer-2023-proxy.onrender.com/2.0/vacancies/?count=100/&published=1&keyword=${serchkeyword}&catalogues=${datafilter}/`, {
+    const response = await fetch(`https://startup-summer-2023-proxy.onrender.com/2.0/vacancies/?count=100/&published=1&keyword=${serchkeyword}&catalogues=${datafilter}&payment_from=${dataFilterPaymentFrom}&payment_to=${dataFilterPaymentTo}&no_agreement=1`, {
       method: 'Get',
       mode: 'cors',
       credentials: "include",

@@ -54,7 +54,7 @@ body {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    flex: 1 1 20;
+    flex: 1 1 10;
     padding: 10px;
 
 }
@@ -141,7 +141,11 @@ body {
     border-radius: 12px;
     border: 1px solid #EAEBED;
     box-sizing: border-box;
-
+    text-decoration: none;
+    justify-content: space-around;
+    /* gap: 10px; */
+    /* font-family: 'Inter'; */
+    /* font-style: normal; */
 }
 
 .container {
@@ -155,4 +159,23 @@ body {
     max-width: 100%;
     flex-wrap: wrap;
     gap: 16px;
+}
+
+.content {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 5px;
+    align-items: center;
+}
+
+.text {
+    color: #232134;
+    text-decoration: none;
+}
+
+.main_info_item1 {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
 }

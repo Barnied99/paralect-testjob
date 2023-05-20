@@ -1,12 +1,24 @@
 import styles from "../styles/Vacancies.module.css"
 import { v4 as uuidv4 } from 'uuid'
 import parse from 'html-react-parser';
+import { Text } from "@mantine/core";
+import { IconMapPin } from "@tabler/icons-react";
+
+
 
 
 const VacanciesInfo = (data) => {
     const datas = Array(data.data)
+
+    const fixpaymentto = (el) => {
+        return el == 0 ? '' : `${el} `
+    }
+
+    const fixpaymentfrom = (el) => {
+        return el == 0 ? '' : `${el} -`
+    }
     return (
-        <div className="content">
+        <div className={styles.content2}>
             <article>
                 <div className={styles.vacancies}>
                     <div className={styles.flex_vac}>
@@ -14,12 +26,18 @@ const VacanciesInfo = (data) => {
                             {datas.map((el) => (
 
                                 <div className="flex-cont" key={uuidv4()}>
-                                    <h1 key={uuidv4()}>{el.profession}</h1>
-                                    <div key={uuidv4()}>{el.town.title}</div>
-                                    <div key={uuidv4()}>{el.type_of_work.title}</div>
-                                    <div key={uuidv4()}>{el.payment_to}</div>
-                                    <div key={uuidv4()}>{el.payment_from}</div>
-                                    <div key={uuidv4()}>{el.currency}</div>
+                                    <h1 key={uuidv4()} > {el.profession}</h1>
+                                    <div className={styles.content}>
+                                        <Text fw={600} key={uuidv4()} c="#232134" >з/п {fixpaymentfrom(el.payment_from)}</Text>
+                                        <Text fw={600} key={uuidv4()} c="#232134" > {fixpaymentto(el.payment_to)}</Text>
+                                        <Text fw={600} key={uuidv4()} c="#232134" >{el.currency}</Text> •
+                                        <Text key={uuidv4()} className={styles.text}>{el.type_of_work.title}</Text>
+                                    </div>
+                                    <div className={styles.content}>
+                                        <IconMapPin color='#ACADB9' size="1.3rem" />
+                                        <Text key={uuidv4()} className={styles.text}>{el.town.title}</Text>
+                                    </div>
+
                                 </div>
 
 
@@ -41,9 +59,9 @@ const VacanciesInfo = (data) => {
                     </div>
                 </div>
 
-            </article>
+            </article >
 
-        </div>
+        </div >
     )
 }
 
