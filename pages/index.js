@@ -40,7 +40,7 @@ const Home = ({ data, dataselect }) => {
   }
 
   const fixpaymentfrom = (el) => {
-    return el == 0 ? '' : `${el} -`
+    return el == 0 ? '' : `${el}`
   }
 
   function getKeyByValue(obj, value) {
@@ -102,8 +102,7 @@ const Home = ({ data, dataselect }) => {
     e.preventDefault()
 
     if (selectData || value) {
-
-      router.push({
+      return router.push({
         query: `keyword=${value}&catalogues=${selectDataId}&payment_from=${numberdatafrom}&payment_to=${numberdatabefore}`
       })
     }
@@ -147,7 +146,7 @@ const Home = ({ data, dataselect }) => {
   const submitHandler = (e) => {
     e.preventDefault();
     if (value || selectData) {
-      router.push({
+      return router.push({
         query: `catalogues=${selectData}&keyword=${value}`
       })
     }
