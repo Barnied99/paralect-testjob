@@ -20,7 +20,7 @@ const Navbar = () => {
                     </Text></Link>
                 </div>
                 <div className={styles.favorites}>
-                    <Link legacyBehavior href="/favorites"><Text component="a" href="/favorites">
+                    <Link legacyBehavior href="/favorites"><Text component="a" c="blue" href="/favorites">
                         Избранное
                     </Text></Link>
                 </div>
