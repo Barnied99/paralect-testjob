@@ -12,49 +12,69 @@ import Image from "next/image";
 import { setLocalStorage, getLocalStorage } from "../utils/store"
 
 
-const FavButtonadd = (el) => {
+const FavButtonadd = ({ el }) => {
   return (
-    <Image src="Star.svg" width={20} height={20} alt='star' />
+    <Image src="Star.svg" width={20} height={20} alt='star' data-elem={`vacancy-${el}-shortlist-button`} />
 
   )
 }
 
-const FavButtondel = (el) => {
-
+const FavButtondel = ({ el }) => {
 
   return (
-    <Image src="Star2.svg" width={20} height={20} alt='star2' />
+    <Image src="Star2.svg" width={20} height={20} alt='star2' data-elem={`vacancy-${el}-shortlist-button`} />
 
   )
 }
 
 const Home = ({ data, dataselect }) => {
 
+
+  // избранное
   const [star, setStar] = useState([])
+  const [local, setLocal] = useState(typeof window !== 'undefined' && localStorage.getItem('data') ?
+    JSON.parse(localStorage.getItem('data')) : [])
+
+  console.log(local)
+
+
+
+  useEffect(() => {
+    typeof window !== 'undefined' ? window.localStorage.setItem('data', JSON.stringify(local)) : []
+
+  }, [local])
+
+
 
   const starClick = (event, el) => {
     event.preventDefault();
 
     if (star.includes(el)) {
       setStar(star.filter((elem) => elem !== el))
+      setLocal(star.filter((elem) => elem !== el))
+
     } else {
       setStar([...star, el])
+      setLocal([...star, el])
     }
   }
 
-  if (typeof window !== 'undefined') {
-    setLocalStorage('data', star)
 
-  }
+
+  // if (typeof window !== 'undefined') {
+  //   setLocalStorage('data', star)
+
+  // }
+  // 
 
 
   const fixpaymentto = (el) => {
 
-    return el == 0 ? '' : `${el} `
+    return el == 0 ? '' : ` ${el} `
   }
 
   const fixpaymentfrom = (el) => {
-    return el == 0 ? '' : `${el} -`
+    return el == 0 ? '' : `${el}`
   }
 
   function getKeyByValue(obj, value) {
@@ -70,6 +90,8 @@ const Home = ({ data, dataselect }) => {
     setNumberDataBefore(0)
     setSelect([])
   }
+
+
 
 
 
@@ -140,8 +162,6 @@ const Home = ({ data, dataselect }) => {
 
 
 
-  const pagesCount = Math.ceil(items.length / pageSize);
-  // if (pagesCount === 1) return null;
 
   const paginate = (items, currentPage, pagesizemain) => {
     const startIndex = (currentPage - 1) * pagesizemain;
@@ -150,7 +170,6 @@ const Home = ({ data, dataselect }) => {
 
   const datas = paginate(items, currentPage, pagesizemain)
 
-  // const [value, setValue] = useState(' ');
   // 
 
   // поисковик 
@@ -164,10 +183,7 @@ const Home = ({ data, dataselect }) => {
         query: `catalogues=${selectData}&keyword=${value}`
       })
     }
-    // router.push({
-    //   query: ' '
 
-    // })
   }
   // 
 
@@ -199,6 +215,7 @@ const Home = ({ data, dataselect }) => {
                   >
                     <div className="otrasl">
                       <MultiSelect
+                        data-elem='industry-select'
                         label="Отрасль"
                         placeholder="введите отрасль"
                         rightSection={<IconChevronDown size="1rem" />}
@@ -217,6 +234,7 @@ const Home = ({ data, dataselect }) => {
                         direction="column"
                       >
                         <NumberInput
+                          data-elem='salary-from-input'
                           label="Оклад"
                           precision={0}
                           min={0}
@@ -228,6 +246,7 @@ const Home = ({ data, dataselect }) => {
                         />
                         <NumberInput
                           precision={0}
+                          data-elem='salary-to-input'
                           min={0}
                           step={1000}
                           max={100000000}
@@ -240,7 +259,7 @@ const Home = ({ data, dataselect }) => {
                     </div>
 
                     <div className="button">
-                      <Button fullWidth variant="filled"
+                      <Button data-elem='search-button' fullWidth variant="filled"
                         type="submit"
                       >Применить</Button>
                     </div>
@@ -256,7 +275,7 @@ const Home = ({ data, dataselect }) => {
                 <form onSubmit={submitHandler}
                 >
                   <TextInput
-
+                    data-elem='search-input'
                     placeholder="Введите название вакансии" icon={<IconSearch size="0.8rem" />}
                     size="md"
                     value={value}
@@ -264,6 +283,7 @@ const Home = ({ data, dataselect }) => {
                     radius="md"
                     rightSection={
                       <Button
+                        data-elem='search-button'
                         right={22}
                         size="xs"
                         type="submit"
@@ -275,12 +295,12 @@ const Home = ({ data, dataselect }) => {
               <div className="container" >
                 {datas.map((el) => (
 
-                  <Link className="main_info_item" key={uuidv4()} href={`/${el.id}`}  >
+                  <Link className="main_info_item" key={uuidv4()} href={`/${el.id}`} data-elem={`vacancy-${el.id}`}  >
                     <div className="main_info_item1"  >
                       <Text fz="lg" c="#5E96FC" key={uuidv4()}>{el.profession}</Text>
                       <Button radius="md" variant="subtle" value={el.id} onClick={(e) => starClick(e, el)} >
 
-                        {star.includes(el) ? <FavButtondel el={el.id} /> : <FavButtonadd el={el.id} />}
+                        {local.includes(el) ? <FavButtondel el={el.id} /> : <FavButtonadd el={el.id} />}
 
 
                       </Button>
@@ -340,8 +360,7 @@ export async function getServerSideProps(ctx) {
   const dataFilterPaymentFrom = ctx.query.payment_from
   const dataFilterPaymentTo = ctx.query.payment_to
 
-  console.log(dataFilterPaymentFrom)
-  console.log(dataFilterPaymentTo)
+
 
   const a = 'https://startup-summer-proxy-production.up.railway.app'
 
@@ -370,7 +389,6 @@ export async function getServerSideProps(ctx) {
     token_type: 'Bearer',
     reg_user_resumes_count: 1
   };
-  // console.log(key.access_token)
 
   if (serchkeyword !== undefined ?? datafilter) {
 
