@@ -1,7 +1,7 @@
 import Head from "next/head"
 import Link from "next/link";
 import { v4 as uuidv4 } from 'uuid'
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { Flex, Button, NumberInput, TextInput, Loader, MultiSelect, Pagination, Text, ActionIcon } from "@mantine/core";
 import { IconChevronDown } from '@tabler/icons-react';
@@ -9,38 +9,52 @@ import styles from "../styles/Footer.module.css"
 import { IconSearch } from "@tabler/icons-react";
 import { IconMapPin } from "@tabler/icons-react";
 import Image from "next/image";
+import { setLocalStorage, getLocalStorage } from "../utils/store"
 
 
+const FavButtonadd = (el) => {
+  return (
+    <Image src="Star.svg" width={20} height={20} alt='star' />
+
+  )
+}
+
+const FavButtondel = (el) => {
+
+
+  return (
+    <Image src="Star2.svg" width={20} height={20} alt='star2' />
+
+  )
+}
 
 const Home = ({ data, dataselect }) => {
 
-  const [star, setStar] = useState(false)
-  const [starId, setStarId] = useState('')
+  const [star, setStar] = useState([])
 
-  const starClick = (event) => {
+  const starClick = (event, el) => {
     event.preventDefault();
-    setStar(!star)
-    setStarId()
-    console.log(event.currentTarget.value)
-    // console.log(event.currentTarget)
-    // const starid = event.currentTarget
-    // console.log(starid)
-    // if (star == "Star.svg") {
-    //   setStar("Star 2.svg");
-    // } else {
-    //   setStar("Star.svg");
 
-    // }
+    if (star.includes(el)) {
+      setStar(star.filter((elem) => elem !== el))
+    } else {
+      setStar([...star, el])
+    }
+  }
+
+  if (typeof window !== 'undefined') {
+    setLocalStorage('data', star)
+
   }
 
 
-
   const fixpaymentto = (el) => {
+
     return el == 0 ? '' : `${el} `
   }
 
   const fixpaymentfrom = (el) => {
-    return el == 0 ? '' : `${el}`
+    return el == 0 ? '' : `${el} -`
   }
 
   function getKeyByValue(obj, value) {
@@ -264,8 +278,9 @@ const Home = ({ data, dataselect }) => {
                   <Link className="main_info_item" key={uuidv4()} href={`/${el.id}`}  >
                     <div className="main_info_item1"  >
                       <Text fz="lg" c="#5E96FC" key={uuidv4()}>{el.profession}</Text>
-                      <Button radius="md" variant="subtle" value={el.id} onClick={(e) => starClick(e)} >
-                        {star ? <Image src="Star 2.svg" width={20} height={20} alt='star' /> : <Image src="Star.svg" width={20} height={20} alt='star2' />}
+                      <Button radius="md" variant="subtle" value={el.id} onClick={(e) => starClick(e, el)} >
+
+                        {star.includes(el) ? <FavButtondel el={el.id} /> : <FavButtonadd el={el.id} />}
 
 
                       </Button>
@@ -328,23 +343,38 @@ export async function getServerSideProps(ctx) {
   console.log(dataFilterPaymentFrom)
   console.log(dataFilterPaymentTo)
 
-  const del = await fetch('https://startup-summer-2023-proxy.onrender.com/2.0/oauth2/password/?login=sergei.stralenia@gmail.com&password=paralect123&client_id=2356&client_secret=v3.r.137440105.ffdbab114f92b821eac4e21f485343924a773131.06c3bdbb8446aeb91c35b80c42ff69eb9c457948', {
-    method: 'Get',
-    mode: 'cors',
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
-      'x-secret-key': 'GEU4nvd3rej*jeh.eqp',
-      'X-Api-App-Id': 'v3.r.137440105.ffdbab114f92b821eac4e21f485343924a773131.06c3bdbb8446aeb91c35b80c42ff69eb9c457948'
+  const a = 'https://startup-summer-proxy-production.up.railway.app'
 
-    },
-  })
-  const key = await del.json()
-  console.log(key)
+
+  const b = 'https://startup-summer-2023-proxy.onrender.com'
+
+  // const del = await fetch('https://startup-summer-2023-proxy.onrender.com/2.0/oauth2/password/?login=sergei.stralenia@gmail.com&password=paralect123&client_id=2356&client_secret=v3.r.137440105.ffdbab114f92b821eac4e21f485343924a773131.06c3bdbb8446aeb91c35b80c42ff69eb9c457948', {
+  //   method: 'Get',
+  //   mode: 'cors',
+  //   headers: {
+  //     'Accept': 'application/json',
+  //     'Content-Type': 'application/json',
+  //     'x-secret-key': 'GEU4nvd3rej*jeh.eqp',
+  //     'X-Api-App-Id': 'v3.r.137440105.ffdbab114f92b821eac4e21f485343924a773131.06c3bdbb8446aeb91c35b80c42ff69eb9c457948'
+
+  //   },
+  // })
+
+  // const key = await del.json()
+
+  const key = {
+    access_token: 'v3.r.137440105.d2f09dbfe1078e94e2f2a807cce488467371b889.4d7b10938fc01c98f10c39234281ed41778032fe',
+    refresh_token: 'v3.r.137440105.e7c01b7f38c94baf7dcde4e3729f95c89c9e534a.1312bac7199f47777ba5bacfeb59913e5eecfdaa',
+    ttl: 1685288195,
+    expires_in: 604800,
+    token_type: 'Bearer',
+    reg_user_resumes_count: 1
+  };
+  // console.log(key.access_token)
 
   if (serchkeyword !== undefined ?? datafilter) {
 
-    const response = await fetch(`https://startup-summer-2023-proxy.onrender.com/2.0/vacancies/?count=100/&published=1&keyword=${serchkeyword}&catalogues=${datafilter}&payment_from=${dataFilterPaymentFrom}&payment_to=${dataFilterPaymentTo}&no_agreement=1`, {
+    const response = await fetch(`${a}/2.0/vacancies/?count=100/&published=1&keyword=${serchkeyword}&catalogues=${datafilter}&payment_from=${dataFilterPaymentFrom}&payment_to=${dataFilterPaymentTo}&no_agreement=1`, {
       method: 'Get',
       mode: 'cors',
       credentials: "include",
@@ -359,7 +389,7 @@ export async function getServerSideProps(ctx) {
     })
     const data = await response.json();
 
-    const response2 = await fetch(`https://startup-summer-2023-proxy.onrender.com/2.0/catalogues/`, {
+    const response2 = await fetch(`${a}/2.0/catalogues/`, {
       method: 'Get',
       mode: 'cors',
       credentials: "include",
@@ -381,7 +411,7 @@ export async function getServerSideProps(ctx) {
 
     }
   } else {
-    const response = await fetch(`https://startup-summer-2023-proxy.onrender.com/2.0/vacancies/?count=100/`, {
+    const response = await fetch(`${a}/2.0/vacancies/?count=100/`, {
       method: 'Get',
       mode: 'cors',
       credentials: "include",
@@ -396,7 +426,7 @@ export async function getServerSideProps(ctx) {
     })
     const data = await response.json();
 
-    const response2 = await fetch(`https://startup-summer-2023-proxy.onrender.com/2.0/catalogues/`, {
+    const response2 = await fetch(`${a}/2.0/catalogues/`, {
       method: 'Get',
       mode: 'cors',
       credentials: "include",
@@ -423,4 +453,4 @@ export async function getServerSideProps(ctx) {
 
 }
 
-export default Home
+export default Home 

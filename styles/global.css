@@ -94,12 +94,7 @@ body {
     align-items: center;
     flex: 1;
     padding: 10px;
-    /* width: 275px; */
-    /* height: 40px; */
-    /* border-radius: 8px; */
-    /* margin: 4px 20px; */
-    /* background-color: #5E96FC; */
-    /* border: solid #5E96FC; */
+
 }
 
 
@@ -111,20 +106,10 @@ body {
     flex-direction: column;
     flex-wrap: wrap;
 
-    /* gap: 16px; */
 
 }
 
-/* .main_search {
-    display: flex;
-    flex: 1;
-    max-height: 48px;
-    width: 773px;
-    flex-direction: row;
-    justify-content: space-around;
-    border: 1px solid #D5D6DC;
-    border-radius: 8px;
-} */
+
 
 
 
