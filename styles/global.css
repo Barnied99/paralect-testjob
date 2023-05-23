@@ -47,16 +47,18 @@ body {
     border: 1px solid #EAEBED;
     flex-direction: column;
     justify-content: space-around;
-
+    box-sizing: border-box;
 }
 
 .fil {
     display: flex;
+    box-sizing: border-box;
     flex-direction: row;
     justify-content: space-between;
-    flex: 1 1 10;
-    padding: 10px;
-
+    flex: 1 1;
+    padding-left: 10px;
+    padding-right: 10px;
+    max-height: 36px;
 }
 
 .otrasl {

@@ -1,7 +1,7 @@
 import Head from "next/head"
 import styles from "../styles/favorites.module.css"
 import Image from "next/image";
-import { setLocalStorage, getLocalStorage } from "../utils/store"
+// import { setLocalStorage, getLocalStorage } from "../utils/store"
 import { v4 as uuidv4 } from 'uuid'
 import { useState, useEffect } from "react";
 import { Text, Button, Pagination } from "@mantine/core";
@@ -27,26 +27,36 @@ const FavButtonadd = () => {
 const Favorites = () => {
 
 
-    const [datas, setdatas] = useState([])
+    // const [datas, setdatas] = useState([])
+    // console.log(datas)
+    const [local, setLocal] = useState(typeof window !== 'undefined' && localStorage.getItem('data') ?
+        JSON.parse(localStorage.getItem('data')) : [])
+
+    // useEffect(() => {
+    //     typeof window !== 'undefined' ? setdatas(getLocalStorage('data')) : []
+
+    // }, [])
+
     useEffect(() => {
-        typeof window !== 'undefined' ? setdatas(getLocalStorage('data')) : console.log(null)
+        typeof window !== 'undefined' ? window.localStorage.setItem('data', JSON.stringify(local)) : []
 
-    }, [])
-
-
+    }, [local])
 
 
     const starClickFav = (event, el) => {
         event.preventDefault();
 
-        if (datas.includes(el)) {
-            setdatas(datas.filter((elem) => elem !== el))
-        } else {
-            setdatas([...datas, el])
+        if (local.includes(el)) {
+            // setdatas(datas.filter((elem) => elem !== el))
+            setLocal(local.filter((elem) => elem !== el))
+        }
+        else {
+            // setdatas([...datas, el])
+            // setLocal([...local, el])
         }
     }
 
-    const items = datas
+    const items = local
 
     const [currentPage, setCurrentPage] = useState(1);
     const pageSize = 3;
@@ -84,7 +94,7 @@ const Favorites = () => {
                                     <div className={styles.main_info_item1} key={uuidv4()}>
                                         <Text fz="lg" c="#5E96FC" key={uuidv4()}>{el.profession}</Text>
                                         <Button radius="md" variant="subtle" value={el.id} onClick={(e) => starClickFav(e, el)}>
-                                            {datas.includes(el) ? <FavButtondel /> : <FavButtonadd />}
+                                            {local.includes(el) ? <FavButtondel /> : <FavButtonadd />}
                                         </Button>
 
                                     </div>
@@ -105,8 +115,16 @@ const Favorites = () => {
                                 : (
                                     <div className={styles.flex_empty}>
                                         <div className={styles.logo}>
-                                            <Image src="empty.svg" width={240} height={240} alt='empty' />
+                                            <Image src="emptyfv.svg" width={240} height={240} alt='empty' />
+                                            <Text fz="xl"> Упс, здесь еще ничего нет!</Text>
+                                            <Link href={`/`}>
+                                                <Button radius="md" variant="light" >
+                                                    Поиск вакансий
+                                                </Button>
+                                            </Link>
+
                                         </div>
+
                                     </div>
                                 )
                         }

@@ -20,7 +20,6 @@ const FavButtonadd = ({ el }) => {
 }
 
 const FavButtondel = ({ el }) => {
-
   return (
     <Image src="Star2.svg" width={20} height={20} alt='star2' data-elem={`vacancy-${el}-shortlist-button`} />
 
@@ -35,6 +34,7 @@ const Home = ({ data, dataselect }) => {
   const [local, setLocal] = useState(typeof window !== 'undefined' && localStorage.getItem('data') ?
     JSON.parse(localStorage.getItem('data')) : [])
 
+  console.log(star)
   console.log(local)
 
 
@@ -51,11 +51,11 @@ const Home = ({ data, dataselect }) => {
 
     if (star.includes(el)) {
       setStar(star.filter((elem) => elem !== el))
-      setLocal(star.filter((elem) => elem !== el))
+      setLocal(local.filter((elem) => elem !== el))
 
     } else {
       setStar([...star, el])
-      setLocal([...star, el])
+      setLocal([...local, el])
     }
   }
 
@@ -152,6 +152,8 @@ const Home = ({ data, dataselect }) => {
   // пагинация
   const items = data.objects
 
+
+
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 25;
   const pagesizemain = 4
@@ -201,14 +203,14 @@ const Home = ({ data, dataselect }) => {
               <div className="baraside">
                 <div className="filter">
                   <div className="fil">
-                    <Text>Фильтр</Text>
+                    <span >Фильтр</span>
                     <Button
                       onClick={resetButton}
                       size={'sm'}
-                      variant={"subtle"}
-                      c="dimmed"
-                      compact>
-                      сбросить все x</Button>
+                      variant="subtle"
+                      c="#ACADB9"
+                      compact><Text>сбросить все x</Text>
+                    </Button>
                   </div>
 
                   <form onSubmit={submitFilter}
@@ -238,6 +240,7 @@ const Home = ({ data, dataselect }) => {
                           label="Оклад"
                           precision={0}
                           min={0}
+
                           step={1000}
                           max={100000000}
                           placeholder="От"
@@ -248,6 +251,7 @@ const Home = ({ data, dataselect }) => {
                           precision={0}
                           data-elem='salary-to-input'
                           min={0}
+
                           step={1000}
                           max={100000000}
                           placeholder="До"
@@ -298,10 +302,11 @@ const Home = ({ data, dataselect }) => {
                   <Link className="main_info_item" key={uuidv4()} href={`/${el.id}`} data-elem={`vacancy-${el.id}`}  >
                     <div className="main_info_item1"  >
                       <Text fz="lg" c="#5E96FC" key={uuidv4()}>{el.profession}</Text>
+
+
                       <Button radius="md" variant="subtle" value={el.id} onClick={(e) => starClick(e, el)} >
-
-                        {local.includes(el) ? <FavButtondel el={el.id} /> : <FavButtonadd el={el.id} />}
-
+                        {local.includes(el) ? <FavButtondel el={el.id} /> : <FavButtonadd el={el.id} />
+                        }
 
                       </Button>
 

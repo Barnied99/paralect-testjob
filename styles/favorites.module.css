@@ -1,10 +1,11 @@
 .logo {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     flex: 1 1 100%;
     min-height: 660px;
+    gap: 20px;
 }
 
 .flex_empty {
