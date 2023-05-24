@@ -1,41 +1,25 @@
 import Head from "next/head"
 import styles from "../styles/favorites.module.css"
 import Image from "next/image";
-// import { setLocalStorage, getLocalStorage } from "../utils/store"
 import { v4 as uuidv4 } from 'uuid'
 import { useState, useEffect } from "react";
 import { Text, Button, Pagination } from "@mantine/core";
 import { IconMapPin } from "@tabler/icons-react";
 import Link from "next/link";
 import stylesf from "../styles/Footer.module.css"
+import FavButtonadd from "@/components/favbuttonadd";
+import FavButtondel from "@/components/favbuttondel";
+import Emptystate from "@/components/emptystate";
 
-
-const FavButtondel = () => {
-    return (
-        <Image src="Star2.svg" width={20} height={20} alt='star2' />
-
-    )
-}
-
-const FavButtonadd = () => {
-    return (
-        <Image src="Star.svg" width={20} height={20} alt='star' />
-
-    )
-}
 
 const Favorites = () => {
 
 
-    // const [datas, setdatas] = useState([])
-    // console.log(datas)
+
     const [local, setLocal] = useState(typeof window !== 'undefined' && localStorage.getItem('data') ?
         JSON.parse(localStorage.getItem('data')) : [])
 
-    // useEffect(() => {
-    //     typeof window !== 'undefined' ? setdatas(getLocalStorage('data')) : []
 
-    // }, [])
 
     useEffect(() => {
         typeof window !== 'undefined' ? window.localStorage.setItem('data', JSON.stringify(local)) : []
@@ -47,13 +31,9 @@ const Favorites = () => {
         event.preventDefault();
 
         if (local.includes(el)) {
-            // setdatas(datas.filter((elem) => elem !== el))
             setLocal(local.filter((elem) => elem !== el))
         }
-        else {
-            // setdatas([...datas, el])
-            // setLocal([...local, el])
-        }
+
     }
 
     const items = local
@@ -110,23 +90,9 @@ const Favorites = () => {
                                     </div>
                                 </Link>
                             ))
+                                :
+                                <Emptystate />
 
-
-                                : (
-                                    <div className={styles.flex_empty}>
-                                        <div className={styles.logo}>
-                                            <Image src="emptyfv.svg" width={240} height={240} alt='empty' />
-                                            <Text fz="xl"> Упс, здесь еще ничего нет!</Text>
-                                            <Link href={`/`}>
-                                                <Button radius="md" variant="light" >
-                                                    Поиск вакансий
-                                                </Button>
-                                            </Link>
-
-                                        </div>
-
-                                    </div>
-                                )
                         }
                     </div>
                 </div>

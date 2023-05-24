@@ -76,3 +76,8 @@
     justify-content: space-around;
 
 }
+
+.flex_balloon {
+    display: flex;
+    justify-content: center;
+}

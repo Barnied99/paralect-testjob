@@ -3,46 +3,30 @@ import Link from "next/link";
 import { v4 as uuidv4 } from 'uuid'
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import { Flex, Button, NumberInput, TextInput, Loader, MultiSelect, Pagination, Text, ActionIcon } from "@mantine/core";
+import { Flex, Button, NumberInput, TextInput, MultiSelect, Pagination, Text } from "@mantine/core";
 import { IconChevronDown } from '@tabler/icons-react';
 import styles from "../styles/Footer.module.css"
 import { IconSearch } from "@tabler/icons-react";
 import { IconMapPin } from "@tabler/icons-react";
 import Image from "next/image";
-import { setLocalStorage, getLocalStorage } from "../utils/store"
-
-
-const FavButtonadd = ({ el }) => {
-  return (
-    <Image src="Star.svg" width={20} height={20} alt='star' data-elem={`vacancy-${el}-shortlist-button`} />
-
-  )
-}
-
-const FavButtondel = ({ el }) => {
-  return (
-    <Image src="Star2.svg" width={20} height={20} alt='star2' data-elem={`vacancy-${el}-shortlist-button`} />
-
-  )
-}
+import FavButtonadd from "@/components/favbuttonadd";
+import FavButtondel from "@/components/favbuttondel";
+import EmptystateMain from "@/components/emptystatemain";
 
 const Home = ({ data, dataselect }) => {
 
 
   // избранное
-  const [star, setStar] = useState([])
+  const [star, setStar] = useState([]);
   const [local, setLocal] = useState(typeof window !== 'undefined' && localStorage.getItem('data') ?
-    JSON.parse(localStorage.getItem('data')) : [])
-
-  console.log(star)
-  console.log(local)
+    JSON.parse(localStorage.getItem('data')) : []);
 
 
 
   useEffect(() => {
     typeof window !== 'undefined' ? window.localStorage.setItem('data', JSON.stringify(local)) : []
 
-  }, [local])
+  }, [local]);
 
 
 
@@ -50,55 +34,43 @@ const Home = ({ data, dataselect }) => {
     event.preventDefault();
 
     if (star.includes(el)) {
-      setStar(star.filter((elem) => elem !== el))
-      setLocal(local.filter((elem) => elem !== el))
+      setStar(star.filter((elem) => elem !== el));
+      setLocal(local.filter((elem) => elem !== el));
 
     } else {
-      setStar([...star, el])
-      setLocal([...local, el])
+      setStar([...star, el]);
+      setLocal([...local, el]);
     }
-  }
-
-
-
-  // if (typeof window !== 'undefined') {
-  //   setLocalStorage('data', star)
-
-  // }
-  // 
+  };
 
 
   const fixpaymentto = (el) => {
 
     return el == 0 ? '' : ` ${el} `
-  }
+  };
 
   const fixpaymentfrom = (el) => {
     return el == 0 ? '' : `${el}`
-  }
+  };
 
+  //catalogues=number 
   function getKeyByValue(obj, value) {
     for (let key in obj) {
       if (obj[key] === value) {
         return key;
       }
     }
-  }
+  };
 
+  // reset
   const resetButton = () => {
     setNumberDataFrom(0)
     setNumberDataBefore(0)
     setSelect([])
-  }
-
-
-
+  };
 
 
   // поиск отрасли
-
-
-
 
 
   const masselectTitle = dataselect.reduce((acc, el, i) => {
@@ -106,24 +78,20 @@ const Home = ({ data, dataselect }) => {
       ...acc,
       [el.key]: el.title.split(',')[0]
     }
-  }, [])
-
-  const selectedValues = Object.values(masselectTitle)
+  }, []);
 
 
 
-
-  const [value, setValue] = useState("");
-  function handlesetSelect(value) {
-    setSelect(value)
-    const strvalue = value.toString()
+  const [value, setValue] = useState([]);
+  function handlesetSelect(val) {
+    setSelect(val)
+    const strvalue = val.toString()
     const getstrvalue = getKeyByValue(masselectTitle, strvalue)
     setSelectId(getstrvalue)
   }
   const [selectData, setSelect] = useState([]);
   const [selectDataId, setSelectId] = useState([]);
 
-  // 
 
 
 
@@ -155,7 +123,6 @@ const Home = ({ data, dataselect }) => {
 
 
   const [currentPage, setCurrentPage] = useState(1);
-  const pageSize = 25;
   const pagesizemain = 4
 
   const onPageChange = (page) => {
@@ -182,7 +149,7 @@ const Home = ({ data, dataselect }) => {
     e.preventDefault();
     if (value || selectData) {
       return router.push({
-        query: `catalogues=${selectData}&keyword=${value}`
+        query: `catalogues=${selectDataId}&keyword=${value}`
       })
     }
 
@@ -297,39 +264,41 @@ const Home = ({ data, dataselect }) => {
               </div>
 
               <div className="container" >
-                {datas.map((el) => (
+                {
+                  datas.length !== 0 ? datas.map((el) => (
 
-                  <Link className="main_info_item" key={uuidv4()} href={`/${el.id}`} data-elem={`vacancy-${el.id}`}  >
-                    <div className="main_info_item1"  >
-                      <Text fz="lg" c="#5E96FC" key={uuidv4()}>{el.profession}</Text>
-
-
-                      <Button radius="md" variant="subtle" value={el.id} onClick={(e) => starClick(e, el)} >
-                        {local.includes(el) ? <FavButtondel el={el.id} /> : <FavButtonadd el={el.id} />
-                        }
-
-                      </Button>
+                    <Link className="main_info_item" key={uuidv4()} href={`/${el.id}`} data-elem={`vacancy-${el.id}`}  >
+                      <div className="main_info_item1"  >
+                        <Text fz="lg" c="#5E96FC" key={uuidv4()}>{el.profession}</Text>
 
 
-                    </div>
+                        <Button radius="md" variant="subtle" value={el.id} onClick={(e) => starClick(e, el)} >
+                          {local.includes(el) ? <FavButtondel el={el.id} /> : <FavButtonadd el={el.id} />
+                          }
 
-                    <div className="content">
-                      <Text fw={600} key={uuidv4()} c="#232134" >з/п {fixpaymentfrom(el.payment_from)}</Text>
-                      <Text fw={600} key={uuidv4()} c="#232134" > {fixpaymentto(el.payment_to)}</Text>
-                      <Text fw={600} key={uuidv4()} c="#232134" >{el.currency}</Text> •
-                      <Text key={uuidv4()} className="text">{el.type_of_work.title}</Text>
-                    </div>
-                    <div className="content">
-                      <IconMapPin color='#ACADB9' size="1.3rem" />
-                      <Text key={uuidv4()} className="text">{el.town.title}</Text>
-                    </div>
-
-                  </Link>
+                        </Button>
 
 
+                      </div>
 
-                )
-                )}
+                      <div className="content">
+                        <Text fw={600} key={uuidv4()} c="#232134" >з/п {fixpaymentfrom(el.payment_from)}</Text>
+                        <Text fw={600} key={uuidv4()} c="#232134" > {fixpaymentto(el.payment_to)}</Text>
+                        <Text fw={600} key={uuidv4()} c="#232134" >{el.currency}</Text> •
+                        <Text key={uuidv4()} className="text">{el.type_of_work.title}</Text>
+                      </div>
+                      <div className="content">
+                        <IconMapPin color='#ACADB9' size="1.3rem" />
+                        <Text key={uuidv4()} className="text">{el.town.title}</Text>
+                      </div>
+
+                    </Link>
+
+                  )
+
+                  )
+                    : <EmptystateMain />
+                }
               </div>
             </div>
 
@@ -362,6 +331,7 @@ export async function getServerSideProps(ctx) {
 
   const serchkeyword = ctx.query.keyword
   const datafilter = ctx.query.catalogues
+  console.log(datafilter)
   const dataFilterPaymentFrom = ctx.query.payment_from
   const dataFilterPaymentTo = ctx.query.payment_to
 
