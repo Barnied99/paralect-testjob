@@ -331,7 +331,6 @@ export async function getServerSideProps(ctx) {
 
   const serchkeyword = ctx.query.keyword
   const datafilter = ctx.query.catalogues
-  console.log(datafilter)
   const dataFilterPaymentFrom = ctx.query.payment_from
   const dataFilterPaymentTo = ctx.query.payment_to
 
@@ -342,32 +341,33 @@ export async function getServerSideProps(ctx) {
 
   const b = 'https://startup-summer-2023-proxy.onrender.com'
 
-  // const del = await fetch('https://startup-summer-2023-proxy.onrender.com/2.0/oauth2/password/?login=sergei.stralenia@gmail.com&password=paralect123&client_id=2356&client_secret=v3.r.137440105.ffdbab114f92b821eac4e21f485343924a773131.06c3bdbb8446aeb91c35b80c42ff69eb9c457948', {
-  //   method: 'Get',
-  //   mode: 'cors',
-  //   headers: {
-  //     'Accept': 'application/json',
-  //     'Content-Type': 'application/json',
-  //     'x-secret-key': 'GEU4nvd3rej*jeh.eqp',
-  //     'X-Api-App-Id': 'v3.r.137440105.ffdbab114f92b821eac4e21f485343924a773131.06c3bdbb8446aeb91c35b80c42ff69eb9c457948'
 
-  //   },
-  // })
+  const del = await fetch('https://startup-summer-proxy-production.up.railway.app/2.0/oauth2/password/?login=sergei.stralenia@gmail.com&password=paralect123&client_id=2356&client_secret=v3.r.137440105.ffdbab114f92b821eac4e21f485343924a773131.06c3bdbb8446aeb91c35b80c42ff69eb9c457948', {
+    method: 'Get',
+    mode: 'cors',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      'x-secret-key': 'GEU4nvd3rej*jeh.eqp',
+      'X-Api-App-Id': 'v3.r.137440105.ffdbab114f92b821eac4e21f485343924a773131.06c3bdbb8446aeb91c35b80c42ff69eb9c457948'
 
-  // const key = await del.json()
+    },
+  })
 
-  const key = {
-    access_token: 'v3.r.137440105.d2f09dbfe1078e94e2f2a807cce488467371b889.4d7b10938fc01c98f10c39234281ed41778032fe',
-    refresh_token: 'v3.r.137440105.e7c01b7f38c94baf7dcde4e3729f95c89c9e534a.1312bac7199f47777ba5bacfeb59913e5eecfdaa',
-    ttl: 1685288195,
-    expires_in: 604800,
-    token_type: 'Bearer',
-    reg_user_resumes_count: 1
-  };
+  const key = await del.json()
+
+
+
+
+
+
+
+
+
 
   if (serchkeyword !== undefined ?? datafilter) {
 
-    const response = await fetch(`${a}/2.0/vacancies/?count=100/&published=1&keyword=${serchkeyword}&catalogues=${datafilter}&payment_from=${dataFilterPaymentFrom}&payment_to=${dataFilterPaymentTo}&no_agreement=1`, {
+    const response = await fetch(`${a || b}/2.0/vacancies/?count=100/&published=1&keyword=${serchkeyword}&catalogues=${datafilter}&payment_from=${dataFilterPaymentFrom}&payment_to=${dataFilterPaymentTo}&no_agreement=1`, {
       method: 'Get',
       mode: 'cors',
       credentials: "include",
@@ -382,7 +382,7 @@ export async function getServerSideProps(ctx) {
     })
     const data = await response.json();
 
-    const response2 = await fetch(`${a}/2.0/catalogues/`, {
+    const response2 = await fetch(`${a || b}/2.0/catalogues/`, {
       method: 'Get',
       mode: 'cors',
       credentials: "include",
@@ -404,7 +404,7 @@ export async function getServerSideProps(ctx) {
 
     }
   } else {
-    const response = await fetch(`${a}/2.0/vacancies/?count=100/`, {
+    const response = await fetch(`${a || b}/2.0/vacancies/?count=100/`, {
       method: 'Get',
       mode: 'cors',
       credentials: "include",
@@ -419,7 +419,7 @@ export async function getServerSideProps(ctx) {
     })
     const data = await response.json();
 
-    const response2 = await fetch(`${a}/2.0/catalogues/`, {
+    const response2 = await fetch(`${a || b}/2.0/catalogues/`, {
       method: 'Get',
       mode: 'cors',
       credentials: "include",
@@ -442,6 +442,7 @@ export async function getServerSideProps(ctx) {
       }
 
     }
+
   }
 
 }
