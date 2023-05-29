@@ -3,7 +3,7 @@ import Link from "next/link";
 import { v4 as uuidv4 } from 'uuid'
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import { Flex, Button, NumberInput, TextInput, MultiSelect, Pagination, Text } from "@mantine/core";
+import { Flex, Button, NumberInput, TextInput, MultiSelect, Pagination, Text, Loader } from "@mantine/core";
 import { IconChevronDown } from '@tabler/icons-react';
 import styles from "../styles/Footer.module.css"
 import { IconSearch } from "@tabler/icons-react";
@@ -12,6 +12,8 @@ import Image from "next/image";
 import FavButtonadd from "@/components/favbuttonadd";
 import FavButtondel from "@/components/favbuttondel";
 import EmptystateMain from "@/components/emptystatemain";
+import nookies from 'nookies'
+import { parseCookies } from 'nookies';
 
 const Home = ({ data, dataselect }) => {
 
@@ -157,6 +159,7 @@ const Home = ({ data, dataselect }) => {
   // 
 
 
+
   return (
     <>
       <Head>
@@ -170,24 +173,28 @@ const Home = ({ data, dataselect }) => {
               <div className="baraside">
                 <div className="filter">
                   <div className="fil">
-                    <span >Фильтр</span>
+                    <Text fw={700} size={20} style={{ minWidth: '93px' }}>Фильтр</Text>
                     <Button
                       onClick={resetButton}
                       size={'sm'}
                       variant="subtle"
                       c="#ACADB9"
-                      compact><Text>сбросить все x</Text>
+                      compact><Text fw={300}>сбросить все x</Text>
                     </Button>
                   </div>
 
                   <form onSubmit={submitFilter}
                   >
                     <div className="otrasl">
+                      <Text fw={700} size={16} style={{ maxWidth: '70px' }}>Отрасль</Text>
                       <MultiSelect
                         data-elem='industry-select'
-                        label="Отрасль"
+                        // label="Отрасль"
                         placeholder="введите отрасль"
-                        rightSection={<IconChevronDown size="1rem" />}
+                        styles={{ rightSection: { pointerEvents: 'none' } }}
+
+                        rightSection={<IconChevronDown
+                          size="1rem" />}
                         rightSectionWidth={40}
                         data={Object.values(masselectTitle)}
                         value={selectData}
@@ -201,10 +208,10 @@ const Home = ({ data, dataselect }) => {
                       <Flex
                         gap="sm"
                         direction="column"
-                      >
+                      ><Text fw={700} size={16} style={{ maxWidth: '52px' }}>Оклад</Text>
                         <NumberInput
                           data-elem='salary-from-input'
-                          label="Оклад"
+                          // label="Оклад"
                           precision={0}
                           min={0}
 
@@ -239,7 +246,6 @@ const Home = ({ data, dataselect }) => {
               </div>
 
             </aside>
-
             <div className="main_info">
 
               <div className="main_search">
@@ -329,20 +335,27 @@ const Home = ({ data, dataselect }) => {
 
 export async function getServerSideProps(ctx) {
 
+
   const serchkeyword = ctx.query.keyword
   const datafilter = ctx.query.catalogues
   const dataFilterPaymentFrom = ctx.query.payment_from
   const dataFilterPaymentTo = ctx.query.payment_to
 
 
+  const url = {
+    rail: 'https://startup-summer-proxy-production.up.railway.app',
+    rend: 'https://startup-summer-2023-proxy.onrender.com'
+  }
 
-  const a = 'https://startup-summer-proxy-production.up.railway.app'
 
+  const auth = {
+    login: 'sergei.stralenia@gmail.com',
+    password: 'paralect123',
+    client_id: '2356',
+    client_secret: 'v3.r.137440105.ffdbab114f92b821eac4e21f485343924a773131.06c3bdbb8446aeb91c35b80c42ff69eb9c457948'
+  }
 
-  const b = 'https://startup-summer-2023-proxy.onrender.com'
-
-
-  const del = await fetch('https://startup-summer-proxy-production.up.railway.app/2.0/oauth2/password/?login=sergei.stralenia@gmail.com&password=paralect123&client_id=2356&client_secret=v3.r.137440105.ffdbab114f92b821eac4e21f485343924a773131.06c3bdbb8446aeb91c35b80c42ff69eb9c457948', {
+  const optionsLogin = {
     method: 'Get',
     mode: 'cors',
     headers: {
@@ -351,50 +364,55 @@ export async function getServerSideProps(ctx) {
       'x-secret-key': 'GEU4nvd3rej*jeh.eqp',
       'X-Api-App-Id': 'v3.r.137440105.ffdbab114f92b821eac4e21f485343924a773131.06c3bdbb8446aeb91c35b80c42ff69eb9c457948'
 
-    },
-  })
-
-  const key = await del.json()
+    }
+  }
 
 
+  const optionsAccess = {
+    method: 'Get',
+    mode: 'cors',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      'x-secret-key': 'GEU4nvd3rej*jeh.eqp',
+      'X-Api-App-Id': 'v3.r.137440105.ffdbab114f92b821eac4e21f485343924a773131.06c3bdbb8446aeb91c35b80c42ff69eb9c457948',
+      'Authorization': `Bearer `,
+
+    }
+  }
+
+  let cookies = nookies.get(ctx)
+  const access = cookies['cookaccess']
+  const ttl = cookies['cookttl']
 
 
+  if (ttl * 1000 > Date.now()) {
+    console.log(access)
 
+    optionsAccess.headers.Authorization = `Bearer ${access}`
 
+  } else {
 
-
-
-
-  if (serchkeyword !== undefined ?? datafilter) {
-
-    const response = await fetch(`${a || b}/2.0/vacancies/?count=100/&published=1&keyword=${serchkeyword}&catalogues=${datafilter}&payment_from=${dataFilterPaymentFrom}&payment_to=${dataFilterPaymentTo}&no_agreement=1`, {
-      method: 'Get',
-      mode: 'cors',
-      credentials: "include",
-
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        'x-secret-key': 'GEU4nvd3rej*jeh.eqp',
-        'Authorization': `Bearer ${key.access_token}`,
-        'X-Api-App-Id': 'v3.r.137440105.ffdbab114f92b821eac4e21f485343924a773131.06c3bdbb8446aeb91c35b80c42ff69eb9c457948'
-      }
+    let defresp = await fetch(`${url.rail}/2.0/oauth2/password/?login=${auth.login}&password=${auth.password}&client_id=${auth.client_id}&client_secret=${auth.client_secret}`, optionsLogin)
+    let defrespdata = await defresp.json()
+    nookies.set(ctx, 'cookaccess', `${defrespdata.access_token}`, {
+      path: '/',
     })
+    nookies.set(ctx, 'cookttl', `${defrespdata.ttl}`, {
+      path: '/',
+    })
+
+  }
+
+
+
+
+  if (optionsAccess.headers.Authorization.length > 20 && serchkeyword !== undefined) {
+
+
+    const response = await fetch(`${url.rail || url.rend}/2.0/vacancies/?count=100/&published=1&keyword=${serchkeyword}&catalogues=${datafilter}&payment_from=${dataFilterPaymentFrom}&payment_to=${dataFilterPaymentTo}&no_agreement=1`, optionsAccess)
     const data = await response.json();
-
-    const response2 = await fetch(`${a || b}/2.0/catalogues/`, {
-      method: 'Get',
-      mode: 'cors',
-      credentials: "include",
-
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        'x-secret-key': 'GEU4nvd3rej*jeh.eqp',
-        'Authorization': `Bearer ${key.access_token}`,
-        'X-Api-App-Id': 'v3.r.137440105.ffdbab114f92b821eac4e21f485343924a773131.06c3bdbb8446aeb91c35b80c42ff69eb9c457948'
-      }
-    })
+    const response2 = await fetch(`${url.rail || url.rend}/2.0/catalogues/`, optionsAccess)
     const dataselect = await response2.json()
     return {
       props: {
@@ -403,37 +421,12 @@ export async function getServerSideProps(ctx) {
       },
 
     }
+
   } else {
-    const response = await fetch(`${a || b}/2.0/vacancies/?count=100/`, {
-      method: 'Get',
-      mode: 'cors',
-      credentials: "include",
-
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        'x-secret-key': 'GEU4nvd3rej*jeh.eqp',
-        'Authorization': `Bearer ${key.access_token}`,
-        'X-Api-App-Id': 'v3.r.137440105.ffdbab114f92b821eac4e21f485343924a773131.06c3bdbb8446aeb91c35b80c42ff69eb9c457948'
-      }
-    })
+    const response = await fetch(`${url.rail || url.rend}/2.0/vacancies/?count=100/`, optionsLogin)
     const data = await response.json();
-
-    const response2 = await fetch(`${a || b}/2.0/catalogues/`, {
-      method: 'Get',
-      mode: 'cors',
-      credentials: "include",
-
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        'x-secret-key': 'GEU4nvd3rej*jeh.eqp',
-        'Authorization': `Bearer ${key.access_token}`,
-        'X-Api-App-Id': 'v3.r.137440105.ffdbab114f92b821eac4e21f485343924a773131.06c3bdbb8446aeb91c35b80c42ff69eb9c457948'
-      }
-    })
+    const response2 = await fetch(`${url.rail || url.rend}/2.0/catalogues/`, optionsLogin)
     const dataselect = await response2.json()
-
     return {
       props: {
         data,
@@ -443,7 +436,13 @@ export async function getServerSideProps(ctx) {
 
     }
 
+
+
   }
+
+
+
+
 
 }
 

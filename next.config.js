@@ -2,7 +2,7 @@
 const nextConfig = {
   reactStrictMode: true,
   experimental: {
-    largePageDataBytes: 1200 * 1000,
+    largePageDataBytes: 1300 * 1000,
   },
 }
 
