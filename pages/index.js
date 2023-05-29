@@ -3,7 +3,7 @@ import Link from "next/link";
 import { v4 as uuidv4 } from 'uuid'
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import { Flex, Button, NumberInput, TextInput, MultiSelect, Pagination, Text, Loader } from "@mantine/core";
+import { Flex, Button, NumberInput, TextInput, MultiSelect, Pagination, Text, Loader, ScrollArea } from "@mantine/core";
 import { IconChevronDown } from '@tabler/icons-react';
 import styles from "../styles/Footer.module.css"
 import { IconSearch } from "@tabler/icons-react";
@@ -69,6 +69,7 @@ const Home = ({ data, dataselect }) => {
     setNumberDataFrom(0)
     setNumberDataBefore(0)
     setSelect([])
+    setSelectId([])
   };
 
 
@@ -88,12 +89,12 @@ const Home = ({ data, dataselect }) => {
   function handlesetSelect(val) {
     setSelect(val)
     const strvalue = val.toString()
-    const getstrvalue = getKeyByValue(masselectTitle, strvalue)
+
+    const getstrvalue = val.map((el) => getKeyByValue(masselectTitle, el))
     setSelectId(getstrvalue)
   }
   const [selectData, setSelect] = useState([]);
   const [selectDataId, setSelectId] = useState([]);
-
 
 
 
@@ -125,7 +126,7 @@ const Home = ({ data, dataselect }) => {
 
 
   const [currentPage, setCurrentPage] = useState(1);
-  const pagesizemain = 4
+  const pagesizemain = 20
 
   const onPageChange = (page) => {
     setCurrentPage(page);
@@ -179,7 +180,7 @@ const Home = ({ data, dataselect }) => {
                       size={'sm'}
                       variant="subtle"
                       c="#ACADB9"
-                      compact><Text fw={300}>сбросить все x</Text>
+                      compact><Text fw={400}>сбросить все x</Text>
                     </Button>
                   </div>
 
@@ -270,41 +271,47 @@ const Home = ({ data, dataselect }) => {
               </div>
 
               <div className="container" >
-                {
-                  datas.length !== 0 ? datas.map((el) => (
+                <ScrollArea h={580} type="never"  >
+                  <Flex gap="md"
+                    direction="column"
 
-                    <Link className="main_info_item" key={uuidv4()} href={`/${el.id}`} data-elem={`vacancy-${el.id}`}  >
-                      <div className="main_info_item1"  >
-                        <Text fz="lg" c="#5E96FC" key={uuidv4()}>{el.profession}</Text>
-
-
-                        <Button radius="md" variant="subtle" value={el.id} onClick={(e) => starClick(e, el)} >
-                          {local.includes(el) ? <FavButtondel el={el.id} /> : <FavButtonadd el={el.id} />
-                          }
-
-                        </Button>
+                  >
+                    {
+                      datas.length !== 0 ? datas.map((el) => (
+                        <Link className="main_info_item" key={uuidv4()} href={`/${el.id}`} data-elem={`vacancy-${el.id}`}  >
+                          <div className="main_info_item1"  >
+                            <Text fz="lg" c="#5E96FC" key={uuidv4()}>{el.profession}</Text>
 
 
-                      </div>
+                            <Button radius="md" variant="subtle" value={el.id} onClick={(e) => starClick(e, el)} >
+                              {star.includes(el) ? <FavButtondel el={el.id} /> : <FavButtonadd el={el.id} />
+                              }
 
-                      <div className="content">
-                        <Text fw={600} key={uuidv4()} c="#232134" >з/п {fixpaymentfrom(el.payment_from)}</Text>
-                        <Text fw={600} key={uuidv4()} c="#232134" > {fixpaymentto(el.payment_to)}</Text>
-                        <Text fw={600} key={uuidv4()} c="#232134" >{el.currency}</Text> •
-                        <Text key={uuidv4()} className="text">{el.type_of_work.title}</Text>
-                      </div>
-                      <div className="content">
-                        <IconMapPin color='#ACADB9' size="1.3rem" />
-                        <Text key={uuidv4()} className="text">{el.town.title}</Text>
-                      </div>
+                            </Button>
 
-                    </Link>
 
-                  )
+                          </div>
 
-                  )
-                    : <EmptystateMain />
-                }
+                          <div className="content">
+                            <Text fw={600} key={uuidv4()} c="#232134" >з/п {fixpaymentfrom(el.payment_from)}</Text>
+                            <Text fw={600} key={uuidv4()} c="#232134" > {fixpaymentto(el.payment_to)}</Text>
+                            <Text fw={600} key={uuidv4()} c="#232134" >{el.currency}</Text> •
+                            <Text key={uuidv4()} className="text">{el.type_of_work.title}</Text>
+                          </div>
+                          <div className="content">
+                            <IconMapPin color='#ACADB9' size="1.3rem" />
+                            <Text key={uuidv4()} className="text">{el.town.title}</Text>
+                          </div>
+
+                        </Link>
+                      )
+
+                      )
+                        : <EmptystateMain />
+                    }
+                  </Flex>
+                </ScrollArea>
+
               </div>
             </div>
 
@@ -319,7 +326,7 @@ const Home = ({ data, dataselect }) => {
             value={currentPage}
             onChange={onPageChange}
             position="center"
-            total={25} />
+            total={6} />
         </div>
       </footer>
 
@@ -387,7 +394,6 @@ export async function getServerSideProps(ctx) {
 
 
   if (ttl * 1000 > Date.now()) {
-    console.log(access)
 
     optionsAccess.headers.Authorization = `Bearer ${access}`
 
