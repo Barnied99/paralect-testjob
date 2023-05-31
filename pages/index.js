@@ -48,12 +48,19 @@ const Home = ({ data, dataselect }) => {
 
   const fixpaymentto = (el) => {
 
-    return el == 0 ? '' : ` ${el} `
+    return el == 0 ? '' : `до ${el} `
   };
 
   const fixpaymentfrom = (el) => {
-    return el == 0 ? '' : `${el}`
+    return el == 0 ? '' : `от ${el}`
   };
+
+  const fixpayderk = (a, b) => {
+    if (a && b) {
+      return '-'
+    }
+  }
+
 
   //catalogues=number 
   function getKeyByValue(obj, value) {
@@ -174,20 +181,20 @@ const Home = ({ data, dataselect }) => {
               <div className="baraside">
                 <div className="filter">
                   <div className="fil">
-                    <Text fw={700} size={20} style={{ minWidth: '93px' }}>Фильтр</Text>
+                    <Text fw={600} size={20} style={{ minWidth: '93px' }}>Фильтр</Text>
                     <Button
                       onClick={resetButton}
                       size={'sm'}
                       variant="subtle"
                       c="#ACADB9"
-                      compact><Text fw={400}>сбросить все x</Text>
+                      compact><Text fw={450}>Сбросить все x</Text>
                     </Button>
                   </div>
 
                   <form onSubmit={submitFilter}
                   >
                     <div className="otrasl">
-                      <Text fw={700} size={16} style={{ maxWidth: '70px' }}>Отрасль</Text>
+                      <Text fw={600} size={16} style={{ maxWidth: '70px' }}>Отрасль</Text>
                       <MultiSelect
                         data-elem='industry-select'
                         // label="Отрасль"
@@ -209,7 +216,7 @@ const Home = ({ data, dataselect }) => {
                       <Flex
                         gap="sm"
                         direction="column"
-                      ><Text fw={700} size={16} style={{ maxWidth: '52px' }}>Оклад</Text>
+                      ><Text fw={600} size={16} style={{ maxWidth: '52px' }}>Оклад</Text>
                         <NumberInput
                           data-elem='salary-from-input'
                           // label="Оклад"
@@ -294,6 +301,7 @@ const Home = ({ data, dataselect }) => {
 
                           <div className="content">
                             <Text fw={600} key={uuidv4()} c="#232134" >з/п {fixpaymentfrom(el.payment_from)}</Text>
+                            {fixpayderk(el.payment_from, el.payment_to)}
                             <Text fw={600} key={uuidv4()} c="#232134" > {fixpaymentto(el.payment_to)}</Text>
                             <Text fw={600} key={uuidv4()} c="#232134" >{el.currency}</Text> •
                             <Text key={uuidv4()} className="text">{el.type_of_work.title}</Text>
