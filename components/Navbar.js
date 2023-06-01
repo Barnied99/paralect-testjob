@@ -3,19 +3,16 @@ import Image from "next/image";
 import styles from "../styles/Navbar.module.css"
 import { Text } from "@mantine/core";
 import { useRouter } from "next/router";
-import { useMediaQuery } from "@mantine/hooks";
 import { IconSearch } from "@tabler/icons-react";
 import FavButtondel from "@/components/favbuttondel";
 
 
 const Navbar = () => {
-    const respo = useMediaQuery('(max-width:500px)')
 
     const { pathname } = useRouter()
 
     return (
         <>
-
             <nav className={styles.flexheader} >
                 <div className={styles.logo}>
                     <Image src="Union.svg" width={30} height={30} alt='Jobored' />
@@ -36,7 +33,6 @@ const Navbar = () => {
                     </Link>
                 </div>
             </nav>
-
         </>
     );
 };

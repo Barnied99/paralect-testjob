@@ -161,3 +161,10 @@ body {
     flex-direction: row;
     justify-content: space-between;
 }
+
+
+.baraside {
+    display: flex;
+    justify-content: center;
+    flex: 1 1;
+}

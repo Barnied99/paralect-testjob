@@ -54,31 +54,3 @@
 }
 
 /*  */
-
-
-
-
-.logomob {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    flex: 1 1 30%;
-    width: 141px;
-    height: 36px;
-    padding: 10px;
-}
-
-
-.searchmob {
-    display: flex;
-    flex: 1 1 30%;
-    justify-content: center;
-}
-
-
-.favoritesmob {
-    display: flex;
-    flex: 1 1 30%;
-    justify-content: center;
-}

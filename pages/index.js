@@ -14,12 +14,10 @@ import FavButtondel from "@/components/favbuttondel";
 import EmptystateMain from "@/components/emptystatemain";
 import nookies from 'nookies'
 import { parseCookies } from 'nookies';
-import { useMediaQuery } from "@mantine/hooks";
 
 
 const Home = ({ data, dataselect }) => {
 
-  const respo = useMediaQuery('(max-width:500px)')
 
   // избранное
   const [star, setStar] = useState([]);
@@ -177,420 +175,243 @@ const Home = ({ data, dataselect }) => {
         <title>Поиск вакансий</title>
       </Head>
 
-      <>
-        {respo ? (
-          <>
+      <article>
+        <div className="article_main">
+          <div className="flex_main">
+            <aside>
+              <div className="baraside">
+                <div className="filter">
+                  <div className="fil">
+                    <Text fw={600} size={20} style={{ minWidth: '93px' }}>Фильтр</Text>
+                    <Button
+                      onClick={resetButton}
+                      size={'sm'}
+                      variant="subtle"
+                      c="#ACADB9"
+                      compact><Text fw={450}>Сбросить все x</Text>
+                    </Button>
+                  </div>
 
-            <article>
-              <div className="article_main">
-                <div className="flex_main_mob">
-                  <aside>
-                    <div className="baraside">
-                      <div className="filtermob">
-                        <div className="fil">
-                          <Text fw={600} size={20} style={{ minWidth: '93px' }}>Фильтр</Text>
-                          <Button
-                            onClick={resetButton}
-                            size={'sm'}
-                            variant="subtle"
-                            c="#ACADB9"
-                            compact><Text fw={450}>Сбросить все x</Text>
-                          </Button>
-                        </div>
+                  <form onSubmit={submitFilter}
+                  >
+                    <div className="otrasl">
+                      <Text fw={600} size={16} style={{ maxWidth: '70px' }}>Отрасль</Text>
+                      <MultiSelect
+                        data-elem='industry-select'
+                        // label="Отрасль"
+                        placeholder="введите отрасль"
+                        styles={{ rightSection: { pointerEvents: 'none' } }}
 
-                        <form onSubmit={submitFilter}
-                        >
-                          <div className="otrasl">
-                            <Text fw={600} size={16} style={{ maxWidth: '70px' }}>Отрасль</Text>
-                            <MultiSelect
-                              data-elem='industry-select'
-                              // label="Отрасль"
-                              placeholder="введите отрасль"
-                              styles={{ rightSection: { pointerEvents: 'none' } }}
-
-                              rightSection={<IconChevronDown
-                                size="1rem" />}
-                              rightSectionWidth={40}
-                              data={Object.values(masselectTitle)}
-                              value={selectData}
-                              onChange={(value) => handlesetSelect(value)}
-                              maxDropdownHeight={150}
-                            />
-                          </div>
-
-                          <div className="oklad">
-
-                            <Flex
-                              gap="sm"
-                              direction="column"
-                            ><Text fw={600} size={16} style={{ maxWidth: '52px' }}>Оклад</Text>
-                              <NumberInput
-                                data-elem='salary-from-input'
-                                // label="Оклад"
-                                precision={0}
-                                min={0}
-
-                                step={1000}
-                                max={100000000}
-                                placeholder="От"
-                                value={numberdatafrom}
-                                onChange={setNumberDataFrom}
-                              />
-                              <NumberInput
-                                precision={0}
-                                data-elem='salary-to-input'
-                                min={0}
-
-                                step={1000}
-                                max={100000000}
-                                placeholder="До"
-                                value={numberdatabefore}
-                                onChange={setNumberDataBefore}
-                              />
-                            </Flex>
-
-                          </div>
-
-                          <div className="button">
-                            <Button data-elem='search-button' fullWidth variant="filled"
-                              type="submit"
-                            >Применить</Button>
-                          </div>
-                        </form>
-                      </div>
+                        rightSection={<IconChevronDown
+                          size="1rem" />}
+                        rightSectionWidth={40}
+                        data={Object.values(masselectTitle)}
+                        value={selectData}
+                        onChange={(value) => handlesetSelect(value)}
+                        maxDropdownHeight={150}
+                      />
                     </div>
 
-                  </aside>
-                  <div className="main_info_mob">
+                    <div className="oklad">
 
-                    <div className="main_search">
-                      <form onSubmit={submitHandler}
-                      >
-                        <TextInput
-                          data-elem='search-input'
-                          placeholder="Введите название вакансии" icon={<IconSearch size="0.8rem" />}
-                          size="md"
-                          value={value}
-                          onChange={(event) => setValue(event.currentTarget.value)}
-                          radius="md"
-                          rightSection={
-                            <Button
-                              data-elem='search-button'
-                              right={22}
-                              size="xs"
-                              type="submit"
-                            >Поиск</Button>}
+                      <Flex
+                        gap="sm"
+                        direction="column"
+                      ><Text fw={600} size={16} style={{ maxWidth: '52px' }}>Оклад</Text>
+                        <NumberInput
+                          data-elem='salary-from-input'
+                          // label="Оклад"
+                          precision={0}
+                          min={0}
+
+                          step={1000}
+                          max={100000000}
+                          placeholder="От"
+                          value={numberdatafrom}
+                          onChange={setNumberDataFrom}
                         />
-                      </form>
-                    </div>
+                        <NumberInput
+                          precision={0}
+                          data-elem='salary-to-input'
+                          min={0}
 
-                    <div className="container_mob" >
-                      <ScrollArea h={580} type="never"  >
-                        <Flex gap="md"
-                          direction="column"
-
-                        >
-                          {
-                            datas.length !== 0 ? datas.map((el) => (
-                              <Link className="main_info_item" key={uuidv4()} href={`/${el.id}`} data-elem={`vacancy-${el.id}`}  >
-                                <div className="main_info_item1"  >
-                                  <Text fz="lg" c="#5E96FC" key={uuidv4()}>{el.profession}</Text>
-
-
-                                  <Button radius="md" variant="subtle" value={el.id} onClick={(e) => starClick(e, el)} >
-                                    {star.includes(el) ? <FavButtondel el={el.id} /> : <FavButtonadd el={el.id} />
-                                    }
-
-                                  </Button>
-
-
-                                </div>
-
-                                <div className="content">
-                                  <Text fw={600} key={uuidv4()} c="#232134" >з/п {fixpaymentfrom(el.payment_from)}</Text>
-                                  {fixpayderk(el.payment_from, el.payment_to)}
-                                  <Text fw={600} key={uuidv4()} c="#232134" > {fixpaymentto(el.payment_to)}</Text>
-                                  <Text fw={600} key={uuidv4()} c="#232134" >{el.currency}</Text> •
-                                  <Text key={uuidv4()} className="text">{el.type_of_work.title}</Text>
-                                </div>
-                                <div className="content">
-                                  <IconMapPin color='#ACADB9' size="1.3rem" />
-                                  <Text key={uuidv4()} className="text">{el.town.title}</Text>
-                                </div>
-
-                              </Link>
-                            )
-
-                            )
-                              : <EmptystateMain />
-                          }
-                        </Flex>
-                      </ScrollArea>
+                          step={1000}
+                          max={100000000}
+                          placeholder="До"
+                          value={numberdatabefore}
+                          onChange={setNumberDataBefore}
+                        />
+                      </Flex>
 
                     </div>
-                  </div>
 
+                    <div className="button">
+                      <Button data-elem='search-button' fullWidth variant="filled"
+                        type="submit"
+                      >Применить</Button>
+                    </div>
+                  </form>
                 </div>
-
               </div>
-            </article>
 
-            <footer>
-              <div className={styles.foot}>
-                <Pagination
-                  value={currentPage}
-                  onChange={onPageChange}
-                  position="center"
-                  total={6} />
+            </aside>
+            <div className="main_info">
+
+              <div className="main_search">
+                <form onSubmit={submitHandler}
+                >
+                  <TextInput
+                    data-elem='search-input'
+                    placeholder="Введите название вакансии" icon={<IconSearch size="0.8rem" />}
+                    size="md"
+                    value={value}
+                    onChange={(event) => setValue(event.currentTarget.value)}
+                    radius="md"
+                    rightSection={
+                      <Button
+                        data-elem='search-button'
+                        right={22}
+                        size="xs"
+                        type="submit"
+                      >Поиск</Button>}
+                  />
+                </form>
               </div>
-            </footer>
-          </>)
 
-          : (
-            <>
+              <div className="container" >
+                <ScrollArea h={580} type="never"  >
+                  <Flex gap="md"
+                    direction="column"
 
-              <article>
-                <div className="article_main">
-                  <div className="flex_main">
-                    <aside>
-                      <div className="baraside">
-                        <div className="filter">
-                          <div className="fil">
-                            <Text fw={600} size={20} style={{ minWidth: '93px' }}>Фильтр</Text>
-                            <Button
-                              onClick={resetButton}
-                              size={'sm'}
-                              variant="subtle"
-                              c="#ACADB9"
-                              compact><Text fw={450}>Сбросить все x</Text>
+                  >
+                    {
+                      datas.length !== 0 ? datas.map((el) => (
+                        <Link className="main_info_item" key={uuidv4()} href={`/${el.id}`} data-elem={`vacancy-${el.id}`}  >
+                          <div className="main_info_item1"  >
+                            <Text fz="lg" c="#5E96FC" key={uuidv4()}>{el.profession}</Text>
+
+
+                            <Button radius="md" variant="subtle" value={el.id} onClick={(e) => starClick(e, el)} >
+                              {star.includes(el) ? <FavButtondel el={el.id} /> : <FavButtonadd el={el.id} />
+                              }
+
                             </Button>
+
+
                           </div>
 
-                          <form onSubmit={submitFilter}
-                          >
-                            <div className="otrasl">
-                              <Text fw={600} size={16} style={{ maxWidth: '70px' }}>Отрасль</Text>
-                              <MultiSelect
-                                data-elem='industry-select'
-                                // label="Отрасль"
-                                placeholder="введите отрасль"
-                                styles={{ rightSection: { pointerEvents: 'none' } }}
+                          <div className="content">
+                            <Text fw={600} key={uuidv4()} c="#232134" >з/п {fixpaymentfrom(el.payment_from)}</Text>
+                            {fixpayderk(el.payment_from, el.payment_to)}
+                            <Text fw={600} key={uuidv4()} c="#232134" > {fixpaymentto(el.payment_to)}</Text>
+                            <Text fw={600} key={uuidv4()} c="#232134" >{el.currency}</Text> •
+                            <Text key={uuidv4()} className="text">{el.type_of_work.title}</Text>
+                          </div>
+                          <div className="content">
+                            <IconMapPin color='#ACADB9' size="1.3rem" />
+                            <Text key={uuidv4()} className="text">{el.town.title}</Text>
+                          </div>
 
-                                rightSection={<IconChevronDown
-                                  size="1rem" />}
-                                rightSectionWidth={40}
-                                data={Object.values(masselectTitle)}
-                                value={selectData}
-                                onChange={(value) => handlesetSelect(value)}
-                                maxDropdownHeight={150}
-                              />
-                            </div>
+                        </Link>
+                      )
 
-                            <div className="oklad">
+                      )
+                        : <EmptystateMain />
+                    }
+                  </Flex>
+                </ScrollArea>
 
-                              <Flex
-                                gap="sm"
-                                direction="column"
-                              ><Text fw={600} size={16} style={{ maxWidth: '52px' }}>Оклад</Text>
-                                <NumberInput
-                                  data-elem='salary-from-input'
-                                  // label="Оклад"
-                                  precision={0}
-                                  min={0}
+              </div>
+            </div>
 
-                                  step={1000}
-                                  max={100000000}
-                                  placeholder="От"
-                                  value={numberdatafrom}
-                                  onChange={setNumberDataFrom}
-                                />
-                                <NumberInput
-                                  precision={0}
-                                  data-elem='salary-to-input'
-                                  min={0}
+          </div>
 
-                                  step={1000}
-                                  max={100000000}
-                                  placeholder="До"
-                                  value={numberdatabefore}
-                                  onChange={setNumberDataBefore}
-                                />
-                              </Flex>
+        </div>
+      </article>
 
-                            </div>
+      <footer>
+        <div className={styles.foot}>
+          <Pagination
+            value={currentPage}
+            onChange={onPageChange}
+            position="center"
+            total={6} />
+        </div>
+      </footer>
 
-                            <div className="button">
-                              <Button data-elem='search-button' fullWidth variant="filled"
-                                type="submit"
-                              >Применить</Button>
-                            </div>
-                          </form>
-                        </div>
-                      </div>
-
-                    </aside>
-                    <div className="main_info">
-
-                      <div className="main_search">
-                        <form onSubmit={submitHandler}
-                        >
-                          <TextInput
-                            data-elem='search-input'
-                            placeholder="Введите название вакансии" icon={<IconSearch size="0.8rem" />}
-                            size="md"
-                            value={value}
-                            onChange={(event) => setValue(event.currentTarget.value)}
-                            radius="md"
-                            rightSection={
-                              <Button
-                                data-elem='search-button'
-                                right={22}
-                                size="xs"
-                                type="submit"
-                              >Поиск</Button>}
-                          />
-                        </form>
-                      </div>
-
-                      <div className="container" >
-                        <ScrollArea h={580} type="never"  >
-                          <Flex gap="md"
-                            direction="column"
-
-                          >
-                            {
-                              datas.length !== 0 ? datas.map((el) => (
-                                <Link className="main_info_item" key={uuidv4()} href={`/${el.id}`} data-elem={`vacancy-${el.id}`}  >
-                                  <div className="main_info_item1"  >
-                                    <Text fz="lg" c="#5E96FC" key={uuidv4()}>{el.profession}</Text>
-
-
-                                    <Button radius="md" variant="subtle" value={el.id} onClick={(e) => starClick(e, el)} >
-                                      {star.includes(el) ? <FavButtondel el={el.id} /> : <FavButtonadd el={el.id} />
-                                      }
-
-                                    </Button>
-
-
-                                  </div>
-
-                                  <div className="content">
-                                    <Text fw={600} key={uuidv4()} c="#232134" >з/п {fixpaymentfrom(el.payment_from)}</Text>
-                                    {fixpayderk(el.payment_from, el.payment_to)}
-                                    <Text fw={600} key={uuidv4()} c="#232134" > {fixpaymentto(el.payment_to)}</Text>
-                                    <Text fw={600} key={uuidv4()} c="#232134" >{el.currency}</Text> •
-                                    <Text key={uuidv4()} className="text">{el.type_of_work.title}</Text>
-                                  </div>
-                                  <div className="content">
-                                    <IconMapPin color='#ACADB9' size="1.3rem" />
-                                    <Text key={uuidv4()} className="text">{el.town.title}</Text>
-                                  </div>
-
-                                </Link>
-                              )
-
-                              )
-                                : <EmptystateMain />
-                            }
-                          </Flex>
-                        </ScrollArea>
-
-                      </div>
-                    </div>
-
-                  </div>
-
-                </div>
-              </article>
-
-              <footer>
-                <div className={styles.foot}>
-                  <Pagination
-                    value={currentPage}
-                    onChange={onPageChange}
-                    position="center"
-                    total={6} />
-                </div>
-              </footer>
-
-
-            </>
-
-
-          )
-        }
+    </>
+  )
+}
 
 
 
 
-
-
-        export async function getServerSideProps(ctx) {
+export async function getServerSideProps(ctx) {
 
 
   const serchkeyword = ctx.query.keyword
-        const datafilter = ctx.query.catalogues
-        const dataFilterPaymentFrom = ctx.query.payment_from
-        const dataFilterPaymentTo = ctx.query.payment_to
+  const datafilter = ctx.query.catalogues
+  const dataFilterPaymentFrom = ctx.query.payment_from
+  const dataFilterPaymentTo = ctx.query.payment_to
 
 
-        const url = {
-          rail: 'https://startup-summer-proxy-production.up.railway.app',
-        rend: 'https://startup-summer-2023-proxy.onrender.com'
+  const url = {
+    rail: 'https://startup-summer-proxy-production.up.railway.app',
+    rend: 'https://startup-summer-2023-proxy.onrender.com'
   }
 
 
-        const auth = {
-          login: 'sergei.stralenia@gmail.com',
-        password: 'paralect123',
-        client_id: '2356',
-        client_secret: 'v3.r.137440105.ffdbab114f92b821eac4e21f485343924a773131.06c3bdbb8446aeb91c35b80c42ff69eb9c457948'
+  const auth = {
+    login: 'sergei.stralenia@gmail.com',
+    password: 'paralect123',
+    client_id: '2356',
+    client_secret: 'v3.r.137440105.ffdbab114f92b821eac4e21f485343924a773131.06c3bdbb8446aeb91c35b80c42ff69eb9c457948'
   }
 
-        const optionsLogin = {
-          method: 'Get',
-        mode: 'cors',
-        headers: {
-          'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        'x-secret-key': 'GEU4nvd3rej*jeh.eqp',
-        'X-Api-App-Id': 'v3.r.137440105.ffdbab114f92b821eac4e21f485343924a773131.06c3bdbb8446aeb91c35b80c42ff69eb9c457948'
+  const optionsLogin = {
+    method: 'Get',
+    mode: 'cors',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      'x-secret-key': 'GEU4nvd3rej*jeh.eqp',
+      'X-Api-App-Id': 'v3.r.137440105.ffdbab114f92b821eac4e21f485343924a773131.06c3bdbb8446aeb91c35b80c42ff69eb9c457948'
 
     }
   }
 
 
-        const optionsAccess = {
-          method: 'Get',
-        mode: 'cors',
-        headers: {
-          'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        'x-secret-key': 'GEU4nvd3rej*jeh.eqp',
-        'X-Api-App-Id': 'v3.r.137440105.ffdbab114f92b821eac4e21f485343924a773131.06c3bdbb8446aeb91c35b80c42ff69eb9c457948',
-        'Authorization': `Bearer `,
+  const optionsAccess = {
+    method: 'Get',
+    mode: 'cors',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      'x-secret-key': 'GEU4nvd3rej*jeh.eqp',
+      'X-Api-App-Id': 'v3.r.137440105.ffdbab114f92b821eac4e21f485343924a773131.06c3bdbb8446aeb91c35b80c42ff69eb9c457948',
+      'Authorization': `Bearer `,
 
     }
   }
 
-        let cookies = nookies.get(ctx)
-        const access = cookies['cookaccess']
-        const ttl = cookies['cookttl']
+  let cookies = nookies.get(ctx)
+  const access = cookies['cookaccess']
+  const ttl = cookies['cookttl']
 
 
   if (ttl * 1000 > Date.now()) {
 
-          optionsAccess.headers.Authorization = `Bearer ${access}`
+    optionsAccess.headers.Authorization = `Bearer ${access}`
 
-        } else {
+  } else {
 
-          let defresp = await fetch(`${url.rail}/2.0/oauth2/password/?login=${auth.login}&password=${auth.password}&client_id=${auth.client_id}&client_secret=${auth.client_secret}`, optionsLogin)
-        let defrespdata = await defresp.json()
-        nookies.set(ctx, 'cookaccess', `${defrespdata.access_token}`, {
-          path: '/',
+    let defresp = await fetch(`${url.rail}/2.0/oauth2/password/?login=${auth.login}&password=${auth.password}&client_id=${auth.client_id}&client_secret=${auth.client_secret}`, optionsLogin)
+    let defrespdata = await defresp.json()
+    nookies.set(ctx, 'cookaccess', `${defrespdata.access_token}`, {
+      path: '/',
     })
-        nookies.set(ctx, 'cookttl', `${defrespdata.ttl}`, {
-          path: '/',
+    nookies.set(ctx, 'cookttl', `${defrespdata.ttl}`, {
+      path: '/',
     })
 
   }
@@ -602,26 +423,26 @@ const Home = ({ data, dataselect }) => {
 
 
     const response = await fetch(`${url.rail || url.rend}/2.0/vacancies/?count=100/&published=1&keyword=${serchkeyword}&catalogues=${datafilter}&payment_from=${dataFilterPaymentFrom}&payment_to=${dataFilterPaymentTo}&no_agreement=1`, optionsAccess)
-        const data = await response.json();
-        const response2 = await fetch(`${url.rail || url.rend}/2.0/catalogues/`, optionsAccess)
-        const dataselect = await response2.json()
-        return {
-          props: {
-          data,
-          dataselect,
+    const data = await response.json();
+    const response2 = await fetch(`${url.rail || url.rend}/2.0/catalogues/`, optionsAccess)
+    const dataselect = await response2.json()
+    return {
+      props: {
+        data,
+        dataselect,
       },
 
     }
 
   } else {
     const response = await fetch(`${url.rail || url.rend}/2.0/vacancies/?count=100/`, optionsLogin)
-        const data = await response.json();
-        const response2 = await fetch(`${url.rail || url.rend}/2.0/catalogues/`, optionsLogin)
-        const dataselect = await response2.json()
-        return {
-          props: {
-          data,
-          dataselect,
+    const data = await response.json();
+    const response2 = await fetch(`${url.rail || url.rend}/2.0/catalogues/`, optionsLogin)
+    const dataselect = await response2.json()
+    return {
+      props: {
+        data,
+        dataselect,
 
       }
 
@@ -637,4 +458,4 @@ const Home = ({ data, dataselect }) => {
 
 }
 
-        export default Home 
+export default Home 

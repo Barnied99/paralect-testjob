@@ -10,12 +10,25 @@ import stylesf from "../styles/Footer.module.css"
 import FavButtonadd from "@/components/favbuttonadd";
 import FavButtondel from "@/components/favbuttondel";
 import Emptystate from "@/components/emptystate";
-import { useMediaQuery } from "@mantine/hooks";
 
 
 const Favorites = () => {
 
 
+    const fixpaymentto = (el) => {
+
+        return el == 0 ? '' : `до ${el} `
+    };
+
+    const fixpaymentfrom = (el) => {
+        return el == 0 ? '' : `от ${el}`
+    };
+
+    const fixpayderk = (a, b) => {
+        if (a && b) {
+            return '-'
+        }
+    }
 
     const [local, setLocal] = useState(typeof window !== 'undefined' && localStorage.getItem('data') ?
         JSON.parse(localStorage.getItem('data')) : [])
@@ -64,107 +77,55 @@ const Favorites = () => {
             <Head>
                 <title>Избранное</title>
             </Head>
-            <>
-                {respo ? (
-                    <>
-                        <article>
-                            <div className={styles.flex_container}>
-                                <div className={styles.container_mob}>
-                                    <div className={styles.favorite}></div>
-                                    {
-                                        datase.length !== 0 ? datase.map((el) => (
-                                            <Link className={styles.main_info_item_mob} key={uuidv4()} href={`/${el.id}`}>
-                                                <div className={styles.main_info_item1_mob} key={uuidv4()}>
-                                                    <Text fz="lg" c="#5E96FC" truncate key={uuidv4()}>{el.profession}</Text>
-                                                    <Button radius="md" variant="subtle" value={el.id} onClick={(e) => starClickFav(e, el)}>
-                                                        {local.includes(el) ? <FavButtondel /> : <FavButtonadd />}
-                                                    </Button>
 
-                                                </div>
-                                                <div className={styles.content} key={uuidv4()}>
-                                                    <Text fw={600} truncate key={uuidv4()} c="#232134" >з/п {fixpaymentfrom(el.payment_from)}</Text>
-                                                    {fixpayderk(el.payment_from, el.payment_to)}
-                                                    <Text fw={600} truncate key={uuidv4()} c="#232134" > {fixpaymentfrom(el.payment_to)}</Text>
-                                                    <Text fw={600} truncate key={uuidv4()} c="#232134" >{el.currency}</Text> •
-                                                    <Text key={uuidv4()} truncate className="text">{el.type_of_work.title}</Text>
-                                                </div>
-                                                <div className="content" key={uuidv4()}>
-                                                    <IconMapPin color='#ACADB9' size="1.3rem" />
-                                                    <Text key={uuidv4()} truncate className="text">{el.town.title}</Text>
-                                                </div>
-                                            </Link>
-                                        ))
-                                            :
-                                            <Emptystate />
+            <article>
+                <div className={styles.flex_container}>
+                    <div className={styles.container}>
+                        <div className={styles.favorite}></div>
+                        {
+                            datase.length !== 0 ? datase.map((el) => (
+                                <Link className={styles.main_info_item} key={uuidv4()} href={`/${el.id}`}>
+                                    <div className={styles.main_info_item1} key={uuidv4()}>
+                                        <Text fz="lg" c="#5E96FC" key={uuidv4()}>{el.profession}</Text>
+                                        <Button radius="md" variant="subtle" value={el.id} onClick={(e) => starClickFav(e, el)}>
+                                            {local.includes(el) ? <FavButtondel /> : <FavButtonadd />}
+                                        </Button>
 
-                                    }
-                                </div>
-                            </div>
-                        </article>
+                                    </div>
+                                    <div className={styles.content} key={uuidv4()}>
+                                        <Text fw={600} key={uuidv4()} c="#232134" >з/п {fixpaymentfrom(el.payment_from)}</Text>
+                                        {fixpayderk(el.payment_from, el.payment_to)}
 
-                        <footer>
-                            <div className={stylesf.foot}>
-                                <Pagination
-                                    value={currentPage}
-                                    onChange={onPageChange}
-                                    position="center"
-                                    total={3}
+                                        <Text fw={600} key={uuidv4()} c="#232134" > {fixpaymentto(el.payment_to)}</Text>
+                                        <Text fw={600} key={uuidv4()} c="#232134" >{el.currency}</Text> •
+                                        <Text key={uuidv4()} className="text">{el.type_of_work.title}</Text>
+                                    </div>
+                                    <div className="content" key={uuidv4()}>
+                                        <IconMapPin color='#ACADB9' size="1.3rem" />
+                                        <Text key={uuidv4()} className="text">{el.town.title}</Text>
+                                    </div>
+                                </Link>
+                            ))
+                                :
+                                <Emptystate />
 
-                                />
-                            </div>
-                        </footer>
-                    </>
-                ) : (
-                    <>
-                        <article>
-                            <div className={styles.flex_container}>
-                                <div className={styles.container}>
-                                    <div className={styles.favorite}></div>
-                                    {
-                                        datase.length !== 0 ? datase.map((el) => (
-                                            <Link className={styles.main_info_item} key={uuidv4()} href={`/${el.id}`}>
-                                                <div className={styles.main_info_item1} key={uuidv4()}>
-                                                    <Text fz="lg" c="#5E96FC" key={uuidv4()}>{el.profession}</Text>
-                                                    <Button radius="md" variant="subtle" value={el.id} onClick={(e) => starClickFav(e, el)}>
-                                                        {local.includes(el) ? <FavButtondel /> : <FavButtonadd />}
-                                                    </Button>
+                        }
+                    </div>
+                </div>
+            </article>
 
-                                                </div>
-                                                <div className={styles.content} key={uuidv4()}>
-                                                    <Text fw={600} key={uuidv4()} c="#232134" >з/п {el.payment_from}</Text>
-                                                    <Text fw={600} key={uuidv4()} c="#232134" > {el.payment_to}</Text>
-                                                    <Text fw={600} key={uuidv4()} c="#232134" >{el.currency}</Text> •
-                                                    <Text key={uuidv4()} className="text">{el.type_of_work.title}</Text>
-                                                </div>
-                                                <div className="content" key={uuidv4()}>
-                                                    <IconMapPin color='#ACADB9' size="1.3rem" />
-                                                    <Text key={uuidv4()} className="text">{el.town.title}</Text>
-                                                </div>
-                                            </Link>
-                                        ))
-                                            :
-                                            <Emptystate />
+            <footer>
+                <div className={stylesf.foot}>
+                    <Pagination
+                        value={currentPage}
+                        onChange={onPageChange}
+                        position="center"
+                        total={3}
 
-                                    }
-                                </div>
-                            </div>
-                        </article>
+                    />
+                </div>
+            </footer>
 
-                        <footer>
-                            <div className={stylesf.foot}>
-                                <Pagination
-                                    value={currentPage}
-                                    onChange={onPageChange}
-                                    position="center"
-                                    total={3}
-
-                                />
-                            </div>
-                        </footer>
-                    </>
-                )
-                }
-            </>
 
         </>
 
