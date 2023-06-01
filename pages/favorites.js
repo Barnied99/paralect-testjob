@@ -14,7 +14,19 @@ import Emptystate from "@/components/emptystate";
 
 const Favorites = () => {
 
+    const fixpayderk = (a, b) => {
+        if (a && b) {
+            return '-'
+        }
+    }
+    const fixpaymentto = (el) => {
 
+        return el == 0 ? '' : `до ${el} `
+    };
+
+    const fixpaymentfrom = (el) => {
+        return el == 0 ? '' : `от ${el}`
+    };
 
     const [local, setLocal] = useState(typeof window !== 'undefined' && localStorage.getItem('data') ?
         JSON.parse(localStorage.getItem('data')) : [])
@@ -79,8 +91,9 @@ const Favorites = () => {
 
                                     </div>
                                     <div className={styles.content} key={uuidv4()}>
-                                        <Text fw={600} key={uuidv4()} c="#232134" >з/п {el.payment_from}</Text>
-                                        <Text fw={600} key={uuidv4()} c="#232134" > {el.payment_to}</Text>
+                                        <Text fw={600} key={uuidv4()} c="#232134" >з/п {fixpaymentfrom(el.payment_from)}</Text>
+                                        {fixpayderk(el.payment_from, el.payment_to)}
+                                        <Text fw={600} key={uuidv4()} c="#232134" > {fixpaymentfrom(el.payment_to)}</Text>
                                         <Text fw={600} key={uuidv4()} c="#232134" >{el.currency}</Text> •
                                         <Text key={uuidv4()} className="text">{el.type_of_work.title}</Text>
                                     </div>

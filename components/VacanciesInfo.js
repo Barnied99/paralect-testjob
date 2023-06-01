@@ -10,12 +10,17 @@ import { IconMapPin } from "@tabler/icons-react";
 const VacanciesInfo = (data) => {
     const datas = Array(data.data)
 
+    const fixpayderk = (a, b) => {
+        if (a && b) {
+            return '-'
+        }
+    }
     const fixpaymentto = (el) => {
-        return el == 0 ? '' : `${el} `
+        return el == 0 ? '' : `до ${el} `
     }
 
     const fixpaymentfrom = (el) => {
-        return el == 0 ? '' : `${el} -`
+        return el == 0 ? '' : `от ${el} `
     }
     return (
         <div className={styles.content2}>
@@ -29,6 +34,7 @@ const VacanciesInfo = (data) => {
                                     <h1 key={uuidv4()} > {el.profession}</h1>
                                     <div className={styles.content}>
                                         <Text fw={600} key={uuidv4()} c="#232134" >з/п {fixpaymentfrom(el.payment_from)}</Text>
+                                        {fixpayderk(el.payment_from, el.payment_to)}
                                         <Text fw={600} key={uuidv4()} c="#232134" > {fixpaymentto(el.payment_to)}</Text>
                                         <Text fw={600} key={uuidv4()} c="#232134" >{el.currency}</Text> •
                                         <Text key={uuidv4()} className={styles.text}>{el.type_of_work.title}</Text>

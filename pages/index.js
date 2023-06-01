@@ -14,9 +14,12 @@ import FavButtondel from "@/components/favbuttondel";
 import EmptystateMain from "@/components/emptystatemain";
 import nookies from 'nookies'
 import { parseCookies } from 'nookies';
+import { useMediaQuery } from "@mantine/hooks";
+
 
 const Home = ({ data, dataselect }) => {
 
+  const respo = useMediaQuery('(max-width:500px)')
 
   // избранное
   const [star, setStar] = useState([]);
@@ -174,169 +177,345 @@ const Home = ({ data, dataselect }) => {
         <title>Поиск вакансий</title>
       </Head>
 
-      <article>
-        <div className="article_main">
-          <div className="flex_main">
-            <aside>
-              <div className="baraside">
-                <div className="filter">
-                  <div className="fil">
-                    <Text fw={600} size={20} style={{ minWidth: '93px' }}>Фильтр</Text>
-                    <Button
-                      onClick={resetButton}
-                      size={'sm'}
-                      variant="subtle"
-                      c="#ACADB9"
-                      compact><Text fw={450}>Сбросить все x</Text>
-                    </Button>
+      <>
+        {respo ? (
+          <>
+
+            <article>
+              <div className="article_main">
+                <div className="flex_main_mob">
+                  <aside>
+                    <div className="baraside">
+                      <div className="filtermob">
+                        <div className="fil">
+                          <Text fw={600} size={20} style={{ minWidth: '93px' }}>Фильтр</Text>
+                          <Button
+                            onClick={resetButton}
+                            size={'sm'}
+                            variant="subtle"
+                            c="#ACADB9"
+                            compact><Text fw={450}>Сбросить все x</Text>
+                          </Button>
+                        </div>
+
+                        <form onSubmit={submitFilter}
+                        >
+                          <div className="otrasl">
+                            <Text fw={600} size={16} style={{ maxWidth: '70px' }}>Отрасль</Text>
+                            <MultiSelect
+                              data-elem='industry-select'
+                              // label="Отрасль"
+                              placeholder="введите отрасль"
+                              styles={{ rightSection: { pointerEvents: 'none' } }}
+
+                              rightSection={<IconChevronDown
+                                size="1rem" />}
+                              rightSectionWidth={40}
+                              data={Object.values(masselectTitle)}
+                              value={selectData}
+                              onChange={(value) => handlesetSelect(value)}
+                              maxDropdownHeight={150}
+                            />
+                          </div>
+
+                          <div className="oklad">
+
+                            <Flex
+                              gap="sm"
+                              direction="column"
+                            ><Text fw={600} size={16} style={{ maxWidth: '52px' }}>Оклад</Text>
+                              <NumberInput
+                                data-elem='salary-from-input'
+                                // label="Оклад"
+                                precision={0}
+                                min={0}
+
+                                step={1000}
+                                max={100000000}
+                                placeholder="От"
+                                value={numberdatafrom}
+                                onChange={setNumberDataFrom}
+                              />
+                              <NumberInput
+                                precision={0}
+                                data-elem='salary-to-input'
+                                min={0}
+
+                                step={1000}
+                                max={100000000}
+                                placeholder="До"
+                                value={numberdatabefore}
+                                onChange={setNumberDataBefore}
+                              />
+                            </Flex>
+
+                          </div>
+
+                          <div className="button">
+                            <Button data-elem='search-button' fullWidth variant="filled"
+                              type="submit"
+                            >Применить</Button>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+
+                  </aside>
+                  <div className="main_info_mob">
+
+                    <div className="main_search">
+                      <form onSubmit={submitHandler}
+                      >
+                        <TextInput
+                          data-elem='search-input'
+                          placeholder="Введите название вакансии" icon={<IconSearch size="0.8rem" />}
+                          size="md"
+                          value={value}
+                          onChange={(event) => setValue(event.currentTarget.value)}
+                          radius="md"
+                          rightSection={
+                            <Button
+                              data-elem='search-button'
+                              right={22}
+                              size="xs"
+                              type="submit"
+                            >Поиск</Button>}
+                        />
+                      </form>
+                    </div>
+
+                    <div className="container_mob" >
+                      <ScrollArea h={580} type="never"  >
+                        <Flex gap="md"
+                          direction="column"
+
+                        >
+                          {
+                            datas.length !== 0 ? datas.map((el) => (
+                              <Link className="main_info_item" key={uuidv4()} href={`/${el.id}`} data-elem={`vacancy-${el.id}`}  >
+                                <div className="main_info_item1"  >
+                                  <Text fz="lg" c="#5E96FC" key={uuidv4()}>{el.profession}</Text>
+
+
+                                  <Button radius="md" variant="subtle" value={el.id} onClick={(e) => starClick(e, el)} >
+                                    {star.includes(el) ? <FavButtondel el={el.id} /> : <FavButtonadd el={el.id} />
+                                    }
+
+                                  </Button>
+
+
+                                </div>
+
+                                <div className="content">
+                                  <Text fw={600} key={uuidv4()} c="#232134" >з/п {fixpaymentfrom(el.payment_from)}</Text>
+                                  {fixpayderk(el.payment_from, el.payment_to)}
+                                  <Text fw={600} key={uuidv4()} c="#232134" > {fixpaymentto(el.payment_to)}</Text>
+                                  <Text fw={600} key={uuidv4()} c="#232134" >{el.currency}</Text> •
+                                  <Text key={uuidv4()} className="text">{el.type_of_work.title}</Text>
+                                </div>
+                                <div className="content">
+                                  <IconMapPin color='#ACADB9' size="1.3rem" />
+                                  <Text key={uuidv4()} className="text">{el.town.title}</Text>
+                                </div>
+
+                              </Link>
+                            )
+
+                            )
+                              : <EmptystateMain />
+                          }
+                        </Flex>
+                      </ScrollArea>
+
+                    </div>
                   </div>
 
-                  <form onSubmit={submitFilter}
-                  >
-                    <div className="otrasl">
-                      <Text fw={600} size={16} style={{ maxWidth: '70px' }}>Отрасль</Text>
-                      <MultiSelect
-                        data-elem='industry-select'
-                        // label="Отрасль"
-                        placeholder="введите отрасль"
-                        styles={{ rightSection: { pointerEvents: 'none' } }}
-
-                        rightSection={<IconChevronDown
-                          size="1rem" />}
-                        rightSectionWidth={40}
-                        data={Object.values(masselectTitle)}
-                        value={selectData}
-                        onChange={(value) => handlesetSelect(value)}
-                        maxDropdownHeight={150}
-                      />
-                    </div>
-
-                    <div className="oklad">
-
-                      <Flex
-                        gap="sm"
-                        direction="column"
-                      ><Text fw={600} size={16} style={{ maxWidth: '52px' }}>Оклад</Text>
-                        <NumberInput
-                          data-elem='salary-from-input'
-                          // label="Оклад"
-                          precision={0}
-                          min={0}
-
-                          step={1000}
-                          max={100000000}
-                          placeholder="От"
-                          value={numberdatafrom}
-                          onChange={setNumberDataFrom}
-                        />
-                        <NumberInput
-                          precision={0}
-                          data-elem='salary-to-input'
-                          min={0}
-
-                          step={1000}
-                          max={100000000}
-                          placeholder="До"
-                          value={numberdatabefore}
-                          onChange={setNumberDataBefore}
-                        />
-                      </Flex>
-
-                    </div>
-
-                    <div className="button">
-                      <Button data-elem='search-button' fullWidth variant="filled"
-                        type="submit"
-                      >Применить</Button>
-                    </div>
-                  </form>
                 </div>
+
               </div>
+            </article>
 
-            </aside>
-            <div className="main_info">
-
-              <div className="main_search">
-                <form onSubmit={submitHandler}
-                >
-                  <TextInput
-                    data-elem='search-input'
-                    placeholder="Введите название вакансии" icon={<IconSearch size="0.8rem" />}
-                    size="md"
-                    value={value}
-                    onChange={(event) => setValue(event.currentTarget.value)}
-                    radius="md"
-                    rightSection={
-                      <Button
-                        data-elem='search-button'
-                        right={22}
-                        size="xs"
-                        type="submit"
-                      >Поиск</Button>}
-                  />
-                </form>
+            <footer>
+              <div className={styles.foot}>
+                <Pagination
+                  value={currentPage}
+                  onChange={onPageChange}
+                  position="center"
+                  total={6} />
               </div>
+            </footer>
+          </>)
 
-              <div className="container" >
-                <ScrollArea h={580} type="never"  >
-                  <Flex gap="md"
-                    direction="column"
+          : (
+            <>
 
-                  >
-                    {
-                      datas.length !== 0 ? datas.map((el) => (
-                        <Link className="main_info_item" key={uuidv4()} href={`/${el.id}`} data-elem={`vacancy-${el.id}`}  >
-                          <div className="main_info_item1"  >
-                            <Text fz="lg" c="#5E96FC" key={uuidv4()}>{el.profession}</Text>
-
-
-                            <Button radius="md" variant="subtle" value={el.id} onClick={(e) => starClick(e, el)} >
-                              {star.includes(el) ? <FavButtondel el={el.id} /> : <FavButtonadd el={el.id} />
-                              }
-
+              <article>
+                <div className="article_main">
+                  <div className="flex_main">
+                    <aside>
+                      <div className="baraside">
+                        <div className="filter">
+                          <div className="fil">
+                            <Text fw={600} size={20} style={{ minWidth: '93px' }}>Фильтр</Text>
+                            <Button
+                              onClick={resetButton}
+                              size={'sm'}
+                              variant="subtle"
+                              c="#ACADB9"
+                              compact><Text fw={450}>Сбросить все x</Text>
                             </Button>
-
-
                           </div>
 
-                          <div className="content">
-                            <Text fw={600} key={uuidv4()} c="#232134" >з/п {fixpaymentfrom(el.payment_from)}</Text>
-                            {fixpayderk(el.payment_from, el.payment_to)}
-                            <Text fw={600} key={uuidv4()} c="#232134" > {fixpaymentto(el.payment_to)}</Text>
-                            <Text fw={600} key={uuidv4()} c="#232134" >{el.currency}</Text> •
-                            <Text key={uuidv4()} className="text">{el.type_of_work.title}</Text>
-                          </div>
-                          <div className="content">
-                            <IconMapPin color='#ACADB9' size="1.3rem" />
-                            <Text key={uuidv4()} className="text">{el.town.title}</Text>
-                          </div>
+                          <form onSubmit={submitFilter}
+                          >
+                            <div className="otrasl">
+                              <Text fw={600} size={16} style={{ maxWidth: '70px' }}>Отрасль</Text>
+                              <MultiSelect
+                                data-elem='industry-select'
+                                // label="Отрасль"
+                                placeholder="введите отрасль"
+                                styles={{ rightSection: { pointerEvents: 'none' } }}
 
-                        </Link>
-                      )
+                                rightSection={<IconChevronDown
+                                  size="1rem" />}
+                                rightSectionWidth={40}
+                                data={Object.values(masselectTitle)}
+                                value={selectData}
+                                onChange={(value) => handlesetSelect(value)}
+                                maxDropdownHeight={150}
+                              />
+                            </div>
 
-                      )
-                        : <EmptystateMain />
-                    }
-                  </Flex>
-                </ScrollArea>
+                            <div className="oklad">
 
-              </div>
-            </div>
+                              <Flex
+                                gap="sm"
+                                direction="column"
+                              ><Text fw={600} size={16} style={{ maxWidth: '52px' }}>Оклад</Text>
+                                <NumberInput
+                                  data-elem='salary-from-input'
+                                  // label="Оклад"
+                                  precision={0}
+                                  min={0}
 
-          </div>
+                                  step={1000}
+                                  max={100000000}
+                                  placeholder="От"
+                                  value={numberdatafrom}
+                                  onChange={setNumberDataFrom}
+                                />
+                                <NumberInput
+                                  precision={0}
+                                  data-elem='salary-to-input'
+                                  min={0}
 
-        </div>
-      </article>
+                                  step={1000}
+                                  max={100000000}
+                                  placeholder="До"
+                                  value={numberdatabefore}
+                                  onChange={setNumberDataBefore}
+                                />
+                              </Flex>
 
-      <footer>
-        <div className={styles.foot}>
-          <Pagination
-            value={currentPage}
-            onChange={onPageChange}
-            position="center"
-            total={6} />
-        </div>
-      </footer>
+                            </div>
+
+                            <div className="button">
+                              <Button data-elem='search-button' fullWidth variant="filled"
+                                type="submit"
+                              >Применить</Button>
+                            </div>
+                          </form>
+                        </div>
+                      </div>
+
+                    </aside>
+                    <div className="main_info">
+
+                      <div className="main_search">
+                        <form onSubmit={submitHandler}
+                        >
+                          <TextInput
+                            data-elem='search-input'
+                            placeholder="Введите название вакансии" icon={<IconSearch size="0.8rem" />}
+                            size="md"
+                            value={value}
+                            onChange={(event) => setValue(event.currentTarget.value)}
+                            radius="md"
+                            rightSection={
+                              <Button
+                                data-elem='search-button'
+                                right={22}
+                                size="xs"
+                                type="submit"
+                              >Поиск</Button>}
+                          />
+                        </form>
+                      </div>
+
+                      <div className="container" >
+                        <ScrollArea h={580} type="never"  >
+                          <Flex gap="md"
+                            direction="column"
+
+                          >
+                            {
+                              datas.length !== 0 ? datas.map((el) => (
+                                <Link className="main_info_item" key={uuidv4()} href={`/${el.id}`} data-elem={`vacancy-${el.id}`}  >
+                                  <div className="main_info_item1"  >
+                                    <Text fz="lg" c="#5E96FC" key={uuidv4()}>{el.profession}</Text>
+
+
+                                    <Button radius="md" variant="subtle" value={el.id} onClick={(e) => starClick(e, el)} >
+                                      {star.includes(el) ? <FavButtondel el={el.id} /> : <FavButtonadd el={el.id} />
+                                      }
+
+                                    </Button>
+
+
+                                  </div>
+
+                                  <div className="content">
+                                    <Text fw={600} key={uuidv4()} c="#232134" >з/п {fixpaymentfrom(el.payment_from)}</Text>
+                                    {fixpayderk(el.payment_from, el.payment_to)}
+                                    <Text fw={600} key={uuidv4()} c="#232134" > {fixpaymentto(el.payment_to)}</Text>
+                                    <Text fw={600} key={uuidv4()} c="#232134" >{el.currency}</Text> •
+                                    <Text key={uuidv4()} className="text">{el.type_of_work.title}</Text>
+                                  </div>
+                                  <div className="content">
+                                    <IconMapPin color='#ACADB9' size="1.3rem" />
+                                    <Text key={uuidv4()} className="text">{el.town.title}</Text>
+                                  </div>
+
+                                </Link>
+                              )
+
+                              )
+                                : <EmptystateMain />
+                            }
+                          </Flex>
+                        </ScrollArea>
+
+                      </div>
+                    </div>
+
+                  </div>
+
+                </div>
+              </article>
+
+              <footer>
+                <div className={styles.foot}>
+                  <Pagination
+                    value={currentPage}
+                    onChange={onPageChange}
+                    position="center"
+                    total={6} />
+                </div>
+              </footer>
+            </>
+          )
+        }
+      </>
 
 
     </>

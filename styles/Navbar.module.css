@@ -8,16 +8,21 @@
     align-items: center;
 }
 
+
 .logo {
     display: flex;
     flex-direction: row;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
-    flex: 1 1 30%;
+    flex: 1 1 20%;
     width: 141px;
     height: 36px;
     padding: 10px;
+    padding-left: 165px;
+
 }
+
+
 
 .logoname {
     display: flex;
@@ -35,13 +40,45 @@
 
 
 
+
 .favorites {
     display: flex;
     flex: 1 1 30%;
-
-
 }
+
+
+
 
 .active {
     color: #5E96FC
+}
+
+/*  */
+
+
+
+
+.logomob {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    flex: 1 1 30%;
+    width: 141px;
+    height: 36px;
+    padding: 10px;
+}
+
+
+.searchmob {
+    display: flex;
+    flex: 1 1 30%;
+    justify-content: center;
+}
+
+
+.favoritesmob {
+    display: flex;
+    flex: 1 1 30%;
+    justify-content: center;
 }
