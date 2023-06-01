@@ -512,87 +512,85 @@ const Home = ({ data, dataselect }) => {
                     total={6} />
                 </div>
               </footer>
+
+
             </>
+
+
           )
         }
-      </>
-
-
-    </>
-  )
-}
 
 
 
 
 
 
-export async function getServerSideProps(ctx) {
+        export async function getServerSideProps(ctx) {
 
 
   const serchkeyword = ctx.query.keyword
-  const datafilter = ctx.query.catalogues
-  const dataFilterPaymentFrom = ctx.query.payment_from
-  const dataFilterPaymentTo = ctx.query.payment_to
+        const datafilter = ctx.query.catalogues
+        const dataFilterPaymentFrom = ctx.query.payment_from
+        const dataFilterPaymentTo = ctx.query.payment_to
 
 
-  const url = {
-    rail: 'https://startup-summer-proxy-production.up.railway.app',
-    rend: 'https://startup-summer-2023-proxy.onrender.com'
+        const url = {
+          rail: 'https://startup-summer-proxy-production.up.railway.app',
+        rend: 'https://startup-summer-2023-proxy.onrender.com'
   }
 
 
-  const auth = {
-    login: 'sergei.stralenia@gmail.com',
-    password: 'paralect123',
-    client_id: '2356',
-    client_secret: 'v3.r.137440105.ffdbab114f92b821eac4e21f485343924a773131.06c3bdbb8446aeb91c35b80c42ff69eb9c457948'
+        const auth = {
+          login: 'sergei.stralenia@gmail.com',
+        password: 'paralect123',
+        client_id: '2356',
+        client_secret: 'v3.r.137440105.ffdbab114f92b821eac4e21f485343924a773131.06c3bdbb8446aeb91c35b80c42ff69eb9c457948'
   }
 
-  const optionsLogin = {
-    method: 'Get',
-    mode: 'cors',
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
-      'x-secret-key': 'GEU4nvd3rej*jeh.eqp',
-      'X-Api-App-Id': 'v3.r.137440105.ffdbab114f92b821eac4e21f485343924a773131.06c3bdbb8446aeb91c35b80c42ff69eb9c457948'
+        const optionsLogin = {
+          method: 'Get',
+        mode: 'cors',
+        headers: {
+          'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'x-secret-key': 'GEU4nvd3rej*jeh.eqp',
+        'X-Api-App-Id': 'v3.r.137440105.ffdbab114f92b821eac4e21f485343924a773131.06c3bdbb8446aeb91c35b80c42ff69eb9c457948'
 
     }
   }
 
 
-  const optionsAccess = {
-    method: 'Get',
-    mode: 'cors',
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
-      'x-secret-key': 'GEU4nvd3rej*jeh.eqp',
-      'X-Api-App-Id': 'v3.r.137440105.ffdbab114f92b821eac4e21f485343924a773131.06c3bdbb8446aeb91c35b80c42ff69eb9c457948',
-      'Authorization': `Bearer `,
+        const optionsAccess = {
+          method: 'Get',
+        mode: 'cors',
+        headers: {
+          'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'x-secret-key': 'GEU4nvd3rej*jeh.eqp',
+        'X-Api-App-Id': 'v3.r.137440105.ffdbab114f92b821eac4e21f485343924a773131.06c3bdbb8446aeb91c35b80c42ff69eb9c457948',
+        'Authorization': `Bearer `,
 
     }
   }
 
-  let cookies = nookies.get(ctx)
-  const access = cookies['cookaccess']
-  const ttl = cookies['cookttl']
+        let cookies = nookies.get(ctx)
+        const access = cookies['cookaccess']
+        const ttl = cookies['cookttl']
 
 
   if (ttl * 1000 > Date.now()) {
 
-    optionsAccess.headers.Authorization = `Bearer ${access}`
+          optionsAccess.headers.Authorization = `Bearer ${access}`
 
-  } else {
+        } else {
 
-    let defresp = await fetch(`${url.rail}/2.0/oauth2/password/?login=${auth.login}&password=${auth.password}&client_id=${auth.client_id}&client_secret=${auth.client_secret}`, optionsLogin)
-    let defrespdata = await defresp.json()
-    nookies.set(ctx, 'cookaccess', `${defrespdata.access_token}`, {
-      path: '/',
+          let defresp = await fetch(`${url.rail}/2.0/oauth2/password/?login=${auth.login}&password=${auth.password}&client_id=${auth.client_id}&client_secret=${auth.client_secret}`, optionsLogin)
+        let defrespdata = await defresp.json()
+        nookies.set(ctx, 'cookaccess', `${defrespdata.access_token}`, {
+          path: '/',
     })
-    nookies.set(ctx, 'cookttl', `${defrespdata.ttl}`, {
-      path: '/',
+        nookies.set(ctx, 'cookttl', `${defrespdata.ttl}`, {
+          path: '/',
     })
 
   }
@@ -604,26 +602,26 @@ export async function getServerSideProps(ctx) {
 
 
     const response = await fetch(`${url.rail || url.rend}/2.0/vacancies/?count=100/&published=1&keyword=${serchkeyword}&catalogues=${datafilter}&payment_from=${dataFilterPaymentFrom}&payment_to=${dataFilterPaymentTo}&no_agreement=1`, optionsAccess)
-    const data = await response.json();
-    const response2 = await fetch(`${url.rail || url.rend}/2.0/catalogues/`, optionsAccess)
-    const dataselect = await response2.json()
-    return {
-      props: {
-        data,
-        dataselect,
+        const data = await response.json();
+        const response2 = await fetch(`${url.rail || url.rend}/2.0/catalogues/`, optionsAccess)
+        const dataselect = await response2.json()
+        return {
+          props: {
+          data,
+          dataselect,
       },
 
     }
 
   } else {
     const response = await fetch(`${url.rail || url.rend}/2.0/vacancies/?count=100/`, optionsLogin)
-    const data = await response.json();
-    const response2 = await fetch(`${url.rail || url.rend}/2.0/catalogues/`, optionsLogin)
-    const dataselect = await response2.json()
-    return {
-      props: {
-        data,
-        dataselect,
+        const data = await response.json();
+        const response2 = await fetch(`${url.rail || url.rend}/2.0/catalogues/`, optionsLogin)
+        const dataselect = await response2.json()
+        return {
+          props: {
+          data,
+          dataselect,
 
       }
 
@@ -639,4 +637,4 @@ export async function getServerSideProps(ctx) {
 
 }
 
-export default Home 
+        export default Home 

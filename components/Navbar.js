@@ -15,51 +15,28 @@ const Navbar = () => {
 
     return (
         <>
-            {respo ? (
-                <nav className={styles.flexheader} >
-                    <div className={styles.logomob}>
-                        <Image src="Union.svg" width={25} height={25} alt='Jobored' />
-                        <Text className={styles.logoname}>Jobored</Text>
-                    </div>
-                    <div className={styles.searchmob}>
-                        <Link legacyBehavior href="/" >
-                            <Text component="a" href="/" className={pathname === '/' ? styles.active : null}>
-                                <IconSearch size="0.8rem" />
-                            </Text>
-                        </Link>
-                    </div>
-                    <div className={styles.favoritesmob}>
-                        <Link legacyBehavior href="/favorites">
-                            <Text component="a" href="/favorites" className={pathname === '/favorites' ? styles.active : null} >
-                                <FavButtondel />
-                            </Text>
-                        </Link>
-                    </div>
-                </nav>
-            ) :
-                (
-                    <nav className={styles.flexheader} >
-                        <div className={styles.logo}>
-                            <Image src="Union.svg" width={30} height={30} alt='Jobored' />
-                            <Text className={styles.logoname}>Jobored</Text>
-                        </div>
-                        <div className={styles.search}>
-                            <Link legacyBehavior href="/" >
-                                <Text component="a" href="/" className={pathname === '/' ? styles.active : null}>
-                                    Поиск вакансии
-                                </Text>
-                            </Link>
-                        </div>
-                        <div className={styles.favorites}>
-                            <Link legacyBehavior href="/favorites">
-                                <Text component="a" href="/favorites" className={pathname === '/favorites' ? styles.active : null} >
-                                    Избранное
-                                </Text>
-                            </Link>
-                        </div>
-                    </nav>
-                )
-            }
+
+            <nav className={styles.flexheader} >
+                <div className={styles.logo}>
+                    <Image src="Union.svg" width={30} height={30} alt='Jobored' />
+                    <Text className={styles.logoname}>Jobored</Text>
+                </div>
+                <div className={styles.search}>
+                    <Link legacyBehavior href="/" >
+                        <Text component="a" href="/" className={pathname === '/' ? styles.active : null}>
+                            Поиск вакансии
+                        </Text>
+                    </Link>
+                </div>
+                <div className={styles.favorites}>
+                    <Link legacyBehavior href="/favorites">
+                        <Text component="a" href="/favorites" className={pathname === '/favorites' ? styles.active : null} >
+                            Избранное
+                        </Text>
+                    </Link>
+                </div>
+            </nav>
+
         </>
     );
 };
