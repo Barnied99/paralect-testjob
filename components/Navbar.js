@@ -3,8 +3,6 @@ import Image from "next/image";
 import styles from "../styles/Navbar.module.css"
 import { Text } from "@mantine/core";
 import { useRouter } from "next/router";
-import { IconSearch } from "@tabler/icons-react";
-import FavButtondel from "@/components/favbuttondel";
 
 
 const Navbar = () => {

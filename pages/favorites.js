@@ -1,15 +1,10 @@
 import Head from "next/head"
 import styles from "../styles/favorites.module.css"
-import Image from "next/image";
-import { v4 as uuidv4 } from 'uuid'
 import { useState, useEffect } from "react";
-import { Text, Button, Pagination } from "@mantine/core";
-import { IconMapPin } from "@tabler/icons-react";
-import Link from "next/link";
+import { Pagination } from "@mantine/core";
 import stylesf from "../styles/Footer.module.css"
-import FavButtonadd from "@/components/favbuttonadd";
-import FavButtondel from "@/components/favbuttondel";
-import Emptystate from "@/components/emptystate";
+import Favoritesdata from "@/components/favoritesdata";
+
 
 
 const Favorites = () => {
@@ -30,15 +25,18 @@ const Favorites = () => {
         }
     }
 
-    const [local, setLocal] = useState(typeof window !== 'undefined' && localStorage.getItem('data') ?
-        JSON.parse(localStorage.getItem('data')) : [])
+
+
+    const [local, setLocal] = useState([])
 
 
 
     useEffect(() => {
-        typeof window !== 'undefined' ? window.localStorage.setItem('data', JSON.stringify(local)) : []
-
-    }, [local])
+        const chunck = localStorage.getItem('data')
+        if (chunck !== undefined) {
+            setLocal(JSON.parse(chunck))
+        }
+    }, [])
 
 
     const starClickFav = (event, el) => {
@@ -46,6 +44,8 @@ const Favorites = () => {
 
         if (local.includes(el)) {
             setLocal(local.filter((elem) => elem !== el))
+
+            localStorage.setItem('data', JSON.stringify(local.filter((elem) => elem !== el)))
         }
 
     }
@@ -81,35 +81,7 @@ const Favorites = () => {
             <article>
                 <div className={styles.flex_container}>
                     <div className={styles.container}>
-                        <div className={styles.favorite}></div>
-                        {
-                            datase.length !== 0 ? datase.map((el) => (
-                                <Link className={styles.main_info_item} key={uuidv4()} href={`/${el.id}`}>
-                                    <div className={styles.main_info_item1} key={uuidv4()}>
-                                        <Text fz="lg" c="#5E96FC" key={uuidv4()}>{el.profession}</Text>
-                                        <Button radius="md" variant="subtle" value={el.id} onClick={(e) => starClickFav(e, el)}>
-                                            {local.includes(el) ? <FavButtondel /> : <FavButtonadd />}
-                                        </Button>
-
-                                    </div>
-                                    <div className={styles.content} key={uuidv4()}>
-                                        <Text fw={600} key={uuidv4()} c="#232134" >з/п {fixpaymentfrom(el.payment_from)}</Text>
-                                        {fixpayderk(el.payment_from, el.payment_to)}
-
-                                        <Text fw={600} key={uuidv4()} c="#232134" > {fixpaymentto(el.payment_to)}</Text>
-                                        <Text fw={600} key={uuidv4()} c="#232134" >{el.currency}</Text> •
-                                        <Text key={uuidv4()} className="text">{el.type_of_work.title}</Text>
-                                    </div>
-                                    <div className="content" key={uuidv4()}>
-                                        <IconMapPin color='#ACADB9' size="1.3rem" />
-                                        <Text key={uuidv4()} className="text">{el.town.title}</Text>
-                                    </div>
-                                </Link>
-                            ))
-                                :
-                                <Emptystate />
-
-                        }
+                        <Favoritesdata datase={datase} starClickFav={starClickFav} local={local} fixpaymentto={fixpaymentto} fixpaymentfrom={fixpaymentfrom} fixpayderk={fixpayderk} />
                     </div>
                 </div>
             </article>
@@ -120,7 +92,7 @@ const Favorites = () => {
                         value={currentPage}
                         onChange={onPageChange}
                         position="center"
-                        total={3}
+                        total={pageSize}
 
                     />
                 </div>
@@ -134,4 +106,7 @@ const Favorites = () => {
 
 }
 
+
+
 export default Favorites
+

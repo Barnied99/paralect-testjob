@@ -3,17 +3,15 @@ import Link from "next/link";
 import { v4 as uuidv4 } from 'uuid'
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import { Flex, Button, NumberInput, TextInput, MultiSelect, Pagination, Text, Loader, ScrollArea } from "@mantine/core";
+import { Flex, Button, NumberInput, TextInput, MultiSelect, Pagination, Text, ScrollArea } from "@mantine/core";
 import { IconChevronDown } from '@tabler/icons-react';
 import styles from "../styles/Footer.module.css"
 import { IconSearch } from "@tabler/icons-react";
 import { IconMapPin } from "@tabler/icons-react";
-import Image from "next/image";
 import FavButtonadd from "@/components/favbuttonadd";
 import FavButtondel from "@/components/favbuttondel";
 import EmptystateMain from "@/components/emptystatemain";
 import nookies from 'nookies'
-import { parseCookies } from 'nookies';
 
 
 const Home = ({ data, dataselect }) => {
@@ -82,7 +80,6 @@ const Home = ({ data, dataselect }) => {
 
 
   // поиск отрасли
-
 
   const masselectTitle = dataselect.reduce((acc, el, i) => {
     return {
@@ -198,7 +195,6 @@ const Home = ({ data, dataselect }) => {
                       <Text fw={600} size={16} style={{ maxWidth: '70px' }}>Отрасль</Text>
                       <MultiSelect
                         data-elem='industry-select'
-                        // label="Отрасль"
                         placeholder="введите отрасль"
                         styles={{ rightSection: { pointerEvents: 'none' } }}
 
@@ -220,7 +216,6 @@ const Home = ({ data, dataselect }) => {
                       ><Text fw={600} size={16} style={{ maxWidth: '52px' }}>Оклад</Text>
                         <NumberInput
                           data-elem='salary-from-input'
-                          // label="Оклад"
                           precision={0}
                           min={0}
 
@@ -344,9 +339,9 @@ const Home = ({ data, dataselect }) => {
 }
 
 
-
-
-export async function getServerSideProps(ctx) {
+// getStaticProps
+// getServerSideProps 
+export const getServerSideProps = async (ctx) => {
 
 
   const serchkeyword = ctx.query.keyword
@@ -354,10 +349,15 @@ export async function getServerSideProps(ctx) {
   const dataFilterPaymentFrom = ctx.query.payment_from
   const dataFilterPaymentTo = ctx.query.payment_to
 
+  // const serchkeyword = ctx.keyword
+  // const datafilter = ctx.catalogues
+  // const dataFilterPaymentFrom = ctx.payment_from
+  // const dataFilterPaymentTo = ctx.payment_to
 
   const url = {
     rail: 'https://startup-summer-proxy-production.up.railway.app',
-    rend: 'https://startup-summer-2023-proxy.onrender.com'
+    rend: 'https://startup-summer-2023-proxy.onrender.com',
+    orig: 'https://api.superjob.ru',
   }
 
 
@@ -368,14 +368,20 @@ export async function getServerSideProps(ctx) {
     client_secret: 'v3.r.137440105.ffdbab114f92b821eac4e21f485343924a773131.06c3bdbb8446aeb91c35b80c42ff69eb9c457948'
   }
 
+  const auth2 = {
+    login: 'darkbarnied99@gmail.com',
+    password: 'DFio3380',
+    client_id: '2547',
+    client_secret: 'v3.r.137589215.fcf4c49c52536b90f4627b136495a9ba55600c5d.83d03895eee6bdcc01e9104ccc143e6af6c9263c'
+  }
+
   const optionsLogin = {
     method: 'Get',
     mode: 'cors',
     headers: {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
-      'x-secret-key': 'GEU4nvd3rej*jeh.eqp',
-      'X-Api-App-Id': 'v3.r.137440105.ffdbab114f92b821eac4e21f485343924a773131.06c3bdbb8446aeb91c35b80c42ff69eb9c457948'
+      'X-Api-App-Id': 'v3.r.137589215.fcf4c49c52536b90f4627b136495a9ba55600c5d.83d03895eee6bdcc01e9104ccc143e6af6c9263c'
 
     }
   }
@@ -387,8 +393,7 @@ export async function getServerSideProps(ctx) {
     headers: {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
-      'x-secret-key': 'GEU4nvd3rej*jeh.eqp',
-      'X-Api-App-Id': 'v3.r.137440105.ffdbab114f92b821eac4e21f485343924a773131.06c3bdbb8446aeb91c35b80c42ff69eb9c457948',
+      'X-Api-App-Id': 'v3.r.137589215.fcf4c49c52536b90f4627b136495a9ba55600c5d.83d03895eee6bdcc01e9104ccc143e6af6c9263c',
       'Authorization': `Bearer `,
 
     }
@@ -405,7 +410,7 @@ export async function getServerSideProps(ctx) {
 
   } else {
 
-    let defresp = await fetch(`${url.rail}/2.0/oauth2/password/?login=${auth.login}&password=${auth.password}&client_id=${auth.client_id}&client_secret=${auth.client_secret}`, optionsLogin)
+    let defresp = await fetch(`${url.orig}/2.0/oauth2/password/?login=${auth2.login}&password=${auth2.password}&client_id=${auth2.client_id}&client_secret=${auth2.client_secret}`, optionsLogin)
     let defrespdata = await defresp.json()
     nookies.set(ctx, 'cookaccess', `${defrespdata.access_token}`, {
       path: '/',
@@ -422,9 +427,9 @@ export async function getServerSideProps(ctx) {
   if (optionsAccess.headers.Authorization.length > 20 && serchkeyword !== undefined) {
 
 
-    const response = await fetch(`${url.rail || url.rend}/2.0/vacancies/?count=100/&published=1&keyword=${serchkeyword}&catalogues=${datafilter}&payment_from=${dataFilterPaymentFrom}&payment_to=${dataFilterPaymentTo}&no_agreement=1`, optionsAccess)
+    const response = await fetch(`${url.orig}/2.0/vacancies/?count=100/&published=1&keyword=${serchkeyword}&catalogues=${datafilter}&payment_from=${dataFilterPaymentFrom}&payment_to=${dataFilterPaymentTo}&no_agreement=1`, optionsAccess)
     const data = await response.json();
-    const response2 = await fetch(`${url.rail || url.rend}/2.0/catalogues/`, optionsAccess)
+    const response2 = await fetch(`${url.orig}/2.0/catalogues/`, optionsAccess)
     const dataselect = await response2.json()
     return {
       props: {
@@ -435,9 +440,9 @@ export async function getServerSideProps(ctx) {
     }
 
   } else {
-    const response = await fetch(`${url.rail || url.rend}/2.0/vacancies/?count=100/`, optionsLogin)
+    const response = await fetch(`${url.orig}/2.0/vacancies/?count=100/`, optionsLogin)
     const data = await response.json();
-    const response2 = await fetch(`${url.rail || url.rend}/2.0/catalogues/`, optionsLogin)
+    const response2 = await fetch(`${url.orig}/2.0/catalogues/`, optionsLogin)
     const dataselect = await response2.json()
     return {
       props: {
