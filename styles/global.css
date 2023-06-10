@@ -18,6 +18,9 @@ body {
     background-color: grey;
     font-family: sans-serif;
     margin: 0;
+    min-height: -webkit-fill-available;
+    -webkit-text-size-adjust: none;
+    padding-top: env(safe-area-inset-top);
 }
 
 
@@ -38,8 +41,9 @@ body {
     .flex_main {
         flex-direction: column;
         margin-left: 0px;
-        margin-top: 20px;
+        margin-top: 10px;
         margin-right: 0px;
+        gap: 10px;
     }
 }
 
@@ -57,6 +61,12 @@ body {
     justify-content: space-around;
     box-sizing: border-box;
 
+}
+
+@media (max-width:800px) {
+    .filter {
+        height: 330px;
+    }
 }
 
 .fil {
