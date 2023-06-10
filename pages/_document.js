@@ -11,6 +11,7 @@ export default function Document() {
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100&display=swap" rel="stylesheet"></link>
         <link rel="icon" href="/union.svg"></link>
         {/* <link rel="preload" href="emptyfv.svg" as="image"></link> */}
+        <meta name='viewport' content='width=device-width' />
       </Head>
       <body>
         <Main />

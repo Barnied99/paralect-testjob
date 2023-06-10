@@ -34,12 +34,11 @@ const VacanciesInfo = (data) => {
                             <div className={styles.felx_main_info_v1}>
                                 {datas.map((el) => (
 
-                                    <div className="flex-cont" key={uuidv4()}>
-                                        <h1 key={uuidv4()} > {el.profession}</h1>
+                                    <div className={styles.flex_cont} key={uuidv4()}>
+                                        <Text fz="xl" fw={700} key={uuidv4()} > {el.profession}</Text>
                                         <div className={styles.content}>
                                             <Text fw={600} key={uuidv4()} c="#232134" >з/п {fixpaymentfrom(el.payment_from)}</Text>
                                             {fixpayderk(el.payment_from, el.payment_to)}
-
                                             <Text fw={600} key={uuidv4()} c="#232134" > {fixpaymentto(el.payment_to)}</Text>
                                             <Text fw={600} key={uuidv4()} c="#232134" >{el.currency}</Text> •
                                             <Text key={uuidv4()} className={styles.text}>{el.type_of_work.title}</Text>

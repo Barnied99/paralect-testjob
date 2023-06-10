@@ -2,6 +2,7 @@ import Head from "next/head"
 import VacanciesInfo from "@/components/VacanciesInfo"
 import { useRouter } from "next/router"
 import nookies from 'nookies'
+import axios from 'axios';
 
 const Vacancies = ({ data }) => {
     const router = useRouter()
@@ -26,7 +27,7 @@ export const getServerSideProps = async (ctx) => {
     let cookies = nookies.get(ctx)
     const ac = cookies['cookaccess']
 
-    const response = await fetch(`https://api.superjob.ru/2.0/vacancies/${serchkeyword1}`, {
+    const response = await axios.get(`https://api.superjob.ru/2.0/vacancies/${serchkeyword1}`, {
         method: 'Get',
         mode: 'cors',
         credentials: "include",
@@ -42,7 +43,7 @@ export const getServerSideProps = async (ctx) => {
 
     })
 
-    const data = await response.json();
+    const data = await response.data;
 
     return {
         props: { data },

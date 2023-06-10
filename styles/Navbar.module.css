@@ -22,6 +22,15 @@
 
 }
 
+@media (max-width:950px) {
+    .logo {
+        justify-content: center;
+        padding-left: 5px;
+        flex: 1 1 33%;
+
+
+    }
+}
 
 
 .logoname {
@@ -38,6 +47,14 @@
 
 }
 
+@media (max-width:750px) {
+    .search {
+        justify-content: center;
+        flex: 1 1 33%;
+
+
+    }
+}
 
 
 
@@ -46,7 +63,14 @@
     flex: 1 1 30%;
 }
 
+@media (max-width:750px) {
+    .favorites {
+        justify-content: center;
+        flex: 1 1 33%;
 
+
+    }
+}
 
 
 .active {

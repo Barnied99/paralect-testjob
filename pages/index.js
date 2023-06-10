@@ -12,6 +12,7 @@ import FavButtonadd from "@/components/favbuttonadd";
 import FavButtondel from "@/components/favbuttondel";
 import EmptystateMain from "@/components/emptystatemain";
 import nookies from 'nookies'
+import axios from 'axios';
 
 
 const Home = ({ data, dataselect }) => {
@@ -262,6 +263,7 @@ const Home = ({ data, dataselect }) => {
                     value={value}
                     onChange={(event) => setValue(event.currentTarget.value)}
                     radius="md"
+                    border-color="#EAEBED"
                     rightSection={
                       <Button
                         data-elem='search-button'
@@ -339,8 +341,7 @@ const Home = ({ data, dataselect }) => {
 }
 
 
-// getStaticProps
-// getServerSideProps 
+
 export const getServerSideProps = async (ctx) => {
 
 
@@ -349,10 +350,7 @@ export const getServerSideProps = async (ctx) => {
   const dataFilterPaymentFrom = ctx.query.payment_from
   const dataFilterPaymentTo = ctx.query.payment_to
 
-  // const serchkeyword = ctx.keyword
-  // const datafilter = ctx.catalogues
-  // const dataFilterPaymentFrom = ctx.payment_from
-  // const dataFilterPaymentTo = ctx.payment_to
+
 
   const url = {
     rail: 'https://startup-summer-proxy-production.up.railway.app',
@@ -404,20 +402,31 @@ export const getServerSideProps = async (ctx) => {
   const ttl = cookies['cookttl']
 
 
+
   if (ttl * 1000 > Date.now()) {
 
     optionsAccess.headers.Authorization = `Bearer ${access}`
 
   } else {
 
-    let defresp = await fetch(`${url.orig}/2.0/oauth2/password/?login=${auth2.login}&password=${auth2.password}&client_id=${auth2.client_id}&client_secret=${auth2.client_secret}`, optionsLogin)
-    let defrespdata = await defresp.json()
-    nookies.set(ctx, 'cookaccess', `${defrespdata.access_token}`, {
+    // let defresp = await fetch(`${url.orig}/2.0/oauth2/password/?login=${auth2.login}&password=${auth2.password}&client_id=${auth2.client_id}&client_secret=${auth2.client_secret}`, optionsLogin)
+    // let defrespdata = await defresp.json()
+    // nookies.set(ctx, 'cookaccess', `${defrespdata.access_token}`, {
+    //   path: '/',
+    // })
+    // nookies.set(ctx, 'cookttl', `${defrespdata.ttl}`, {
+    //   path: '/',
+    // })
+
+    let defresp2 = await axios.get(`${url.orig}/2.0/oauth2/password/?login=${auth2.login}&password=${auth2.password}&client_id=${auth2.client_id}&client_secret=${auth2.client_secret}`, optionsLogin)
+    let defrespdata2 = defresp2.data
+    nookies.set(ctx, 'cookaccess', `${defrespdata2.access_token}`, {
       path: '/',
     })
-    nookies.set(ctx, 'cookttl', `${defrespdata.ttl}`, {
+    nookies.set(ctx, 'cookttl', `${defrespdata2.ttl}`, {
       path: '/',
     })
+
 
   }
 
@@ -426,32 +435,84 @@ export const getServerSideProps = async (ctx) => {
 
   if (optionsAccess.headers.Authorization.length > 20 && serchkeyword !== undefined) {
 
+    // axios.interceptors.request.use((config) => {
+    //   console.log('Sending Request:', config);
+    //   return config;
+    // }, (error) => {
+    //   return Promise.reject(error)
+    // })
 
-    const response = await fetch(`${url.orig}/2.0/vacancies/?count=100/&published=1&keyword=${serchkeyword}&catalogues=${datafilter}&payment_from=${dataFilterPaymentFrom}&payment_to=${dataFilterPaymentTo}&no_agreement=1`, optionsAccess)
-    const data = await response.json();
-    const response2 = await fetch(`${url.orig}/2.0/catalogues/`, optionsAccess)
-    const dataselect = await response2.json()
+    const [responseax, responseax2] = await Promise.all([
+      axios.get(`${url.orig}/2.0/vacancies/?count=100/&published=1&keyword=${serchkeyword}&catalogues=${datafilter}&payment_from=${dataFilterPaymentFrom}&payment_to=${dataFilterPaymentTo}&no_agreement=1`, optionsAccess),
+
+      axios.get(`${url.orig}/2.0/catalogues/`, optionsAccess)
+    ])
+
+
+    // const responseax = await axios.get(`${url.orig}/2.0/vacancies/?count=100/&published=1&keyword=${serchkeyword}&catalogues=${datafilter}&payment_from=${dataFilterPaymentFrom}&payment_to=${dataFilterPaymentTo}&no_agreement=1`, optionsAccess)
+    // const dataax = await responseax.data
+    // const response2ax = await axios.get(`${url.orig}/2.0/catalogues/`, optionsAccess)
+    // const dataselectax = await response2ax.data
     return {
       props: {
-        data,
-        dataselect,
+        data: responseax.data,
+        dataselect: responseax2.data,
       },
 
     }
 
+    // const response = await fetch(`${url.orig}/2.0/vacancies/?count=100/&published=1&keyword=${serchkeyword}&catalogues=${datafilter}&payment_from=${dataFilterPaymentFrom}&payment_to=${dataFilterPaymentTo}&no_agreement=1`, optionsAccess)
+    // const data = await response.json();
+    // const response2 = await fetch(`${url.orig}/2.0/catalogues/`, optionsAccess)
+    // const dataselect = await response2.json()
+    // return {
+    //   props: {
+    //     data,
+    //     dataselect,
+    //   },
+
+    // }
+
   } else {
-    const response = await fetch(`${url.orig}/2.0/vacancies/?count=100/`, optionsLogin)
-    const data = await response.json();
-    const response2 = await fetch(`${url.orig}/2.0/catalogues/`, optionsLogin)
-    const dataselect = await response2.json()
-    return {
-      props: {
-        data,
-        dataselect,
+    try {
+      const [responseax, responseax2] = await Promise.all([
+        axios.get(`${url.orig}/2.0/vacancies/?count=100/`, optionsLogin),
+        axios.get(`${url.orig}/2.0/catalogues/`, optionsLogin)
+      ])
+      // const responseax = await axios.get(`${url.orig}/2.0/vacancies/?count=100/`, optionsLogin);
+      // const dataax = await responseax.data
+      // const responseax3 = await axios.get(`${url.orig}/2.0/catalogues/`, optionsLogin);
+      // const dataselectax = await responseax3.data
+      return {
+        props: {
+          data: responseax.data,
+          dataselect: responseax2.data,
+
+        }
 
       }
+    } catch (error) {
+      console.error(error)
+      return {
+        props: {}
 
+      }
     }
+
+
+
+    // const response = await fetch(`${url.orig}/2.0/vacancies/?count=100/`, optionsLogin)
+    // const data = await response.json();
+    // const response2 = await fetch(`${url.orig}/2.0/catalogues/`, optionsLogin)
+    // const dataselect = await response2.json()
+    // return {
+    //   props: {
+    //     data,
+    //     dataselect,
+
+    //   }
+
+    // }
 
 
 
