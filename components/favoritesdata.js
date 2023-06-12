@@ -1,8 +1,7 @@
 import Emptystate from "@/components/emptystate";
-import stylesf from "../styles/Footer.module.css"
 import FavButtonadd from "@/components/favbuttonadd";
 import FavButtondel from "@/components/favbuttondel";
-import { Text, Button, Pagination } from "@mantine/core";
+import { Text, Button } from "@mantine/core";
 import { IconMapPin } from "@tabler/icons-react";
 import Link from "next/link";
 import styles from "../styles/favorites.module.css"
@@ -33,7 +32,7 @@ const Favoritesdata = (props) => {
                                 <Text fw={600} key={uuidv4()} c="#232134" >{el.currency}</Text> •
                                 <Text key={uuidv4()} className="text">{el.type_of_work.title}</Text>
                             </div>
-                            <div className="content" key={uuidv4()}>
+                            <div className={styles.content} key={uuidv4()}>
                                 <IconMapPin color='#ACADB9' size="1.3rem" />
                                 <Text key={uuidv4()} className="text">{el.town.title}</Text>
                             </div>

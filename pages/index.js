@@ -3,8 +3,7 @@ import Link from "next/link";
 import { v4 as uuidv4 } from 'uuid'
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import { Flex, Button, NumberInput, TextInput, MultiSelect, Pagination, Text, ScrollArea } from "@mantine/core";
-import { IconChevronDown } from '@tabler/icons-react';
+import { Flex, Button, TextInput, Pagination, Text, ScrollArea } from "@mantine/core";
 import styles from "../styles/Footer.module.css"
 import { IconSearch } from "@tabler/icons-react";
 import { IconMapPin } from "@tabler/icons-react";
@@ -13,15 +12,17 @@ import FavButtondel from "@/components/favbuttondel";
 import EmptystateMain from "@/components/emptystatemain";
 import nookies from 'nookies'
 import axios from 'axios';
-
+import Filter from "@/components/filter";
+import IndexData from "@/components/indexdata";
 
 const Home = ({ data, dataselect }) => {
-
 
   // избранное
   const [star, setStar] = useState([]);
   const [local, setLocal] = useState(typeof window !== 'undefined' && localStorage.getItem('data') ?
     JSON.parse(localStorage.getItem('data')) : []);
+
+
 
 
 
@@ -116,7 +117,7 @@ const Home = ({ data, dataselect }) => {
 
     if (selectData || value) {
       return router.push({
-        query: `keyword=${value}&catalogues=${selectDataId}&payment_from=${numberdatafrom}&payment_to=${numberdatabefore}`
+        query: `keyword=${value}&catalogues=${selectDataId}&payment_from=${numberdatafrom}&payment_to=${numberdatabefore || numberdatafrom}`
       })
     }
 
@@ -171,6 +172,8 @@ const Home = ({ data, dataselect }) => {
     <>
       <Head>
         <title>Поиск вакансий</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+
       </Head>
 
       <article>
@@ -178,84 +181,13 @@ const Home = ({ data, dataselect }) => {
           <div className="flex_main">
             <aside>
               <div className="baraside">
-                <div className="filter">
-                  <div className="fil">
-                    <Text fw={600} size={20} style={{ minWidth: '93px' }}>Фильтр</Text>
-                    <Button
-                      onClick={resetButton}
-                      size={'sm'}
-                      variant="subtle"
-                      c="#ACADB9"
-                      compact><Text fw={450}>Сбросить все x</Text>
-                    </Button>
-                  </div>
-
-                  <form onSubmit={submitFilter}
-                  >
-                    <div className="otrasl">
-                      <Text fw={600} size={16} style={{ maxWidth: '70px' }}>Отрасль</Text>
-                      <MultiSelect
-                        data-elem='industry-select'
-                        placeholder="введите отрасль"
-                        styles={{ rightSection: { pointerEvents: 'none' } }}
-
-                        rightSection={<IconChevronDown
-                          size="1rem" />}
-                        rightSectionWidth={40}
-                        data={Object.values(masselectTitle)}
-                        value={selectData}
-                        onChange={(value) => handlesetSelect(value)}
-                        maxDropdownHeight={150}
-                      />
-                    </div>
-
-                    <div className="oklad">
-
-                      <Flex
-                        gap="sm"
-                        direction="column"
-                      ><Text fw={600} size={16} style={{ maxWidth: '52px' }}>Оклад</Text>
-                        <NumberInput
-                          data-elem='salary-from-input'
-                          precision={0}
-                          min={0}
-
-                          step={1000}
-                          max={100000000}
-                          placeholder="От"
-                          value={numberdatafrom}
-                          onChange={setNumberDataFrom}
-                        />
-                        <NumberInput
-                          precision={0}
-                          data-elem='salary-to-input'
-                          min={0}
-
-                          step={1000}
-                          max={100000000}
-                          placeholder="До"
-                          value={numberdatabefore}
-                          onChange={setNumberDataBefore}
-                        />
-                      </Flex>
-
-                    </div>
-
-                    <div className="button">
-                      <Button data-elem='search-button' fullWidth variant="filled"
-                        type="submit"
-                      >Применить</Button>
-                    </div>
-                  </form>
-                </div>
+                <Filter resetButton={resetButton} submitFilter={submitFilter} masselectTitle={masselectTitle} selectData={selectData} handlesetSelect={handlesetSelect} numberdatafrom={numberdatafrom} setNumberDataFrom={setNumberDataFrom} numberdatabefore={numberdatabefore} setNumberDataBefore={setNumberDataBefore} />
               </div>
-
             </aside>
             <div className="main_info">
 
               <div className="main_search">
-                <form onSubmit={submitHandler}
-                >
+                <form onSubmit={submitHandler}>
                   <TextInput
                     data-elem='search-input'
                     placeholder="Введите название вакансии" icon={<IconSearch size="0.8rem" />}
@@ -276,47 +208,7 @@ const Home = ({ data, dataselect }) => {
               </div>
 
               <div className="container" >
-                <ScrollArea h={580} type="never"  >
-                  <Flex gap="md"
-                    direction="column"
-
-                  >
-                    {
-                      datas.length !== 0 ? datas.map((el) => (
-                        <Link className="main_info_item" key={uuidv4()} href={`/${el.id}`} data-elem={`vacancy-${el.id}`}  >
-                          <div className="main_info_item1"  >
-                            <Text fz="lg" c="#5E96FC" key={uuidv4()}>{el.profession}</Text>
-
-
-                            <Button radius="md" variant="subtle" value={el.id} onClick={(e) => starClick(e, el)} >
-                              {star.includes(el) ? <FavButtondel el={el.id} /> : <FavButtonadd el={el.id} />
-                              }
-
-                            </Button>
-
-
-                          </div>
-
-                          <div className="content">
-                            <Text fw={600} key={uuidv4()} c="#232134" >з/п {fixpaymentfrom(el.payment_from)}</Text>
-                            {fixpayderk(el.payment_from, el.payment_to)}
-                            <Text fw={600} key={uuidv4()} c="#232134" > {fixpaymentto(el.payment_to)}</Text>
-                            <Text fw={600} key={uuidv4()} c="#232134" >{el.currency}</Text> •
-                            <Text key={uuidv4()} className="text">{el.type_of_work.title}</Text>
-                          </div>
-                          <div className="content">
-                            <IconMapPin color='#ACADB9' size="1.3rem" />
-                            <Text key={uuidv4()} className="text">{el.town.title}</Text>
-                          </div>
-
-                        </Link>
-                      )
-
-                      )
-                        : <EmptystateMain />
-                    }
-                  </Flex>
-                </ScrollArea>
+                <IndexData datas={datas} starClick={starClick} local={local} fixpaymentfrom={fixpaymentfrom} fixpayderk={fixpayderk} fixpaymentto={fixpaymentto} />
 
               </div>
             </div>
@@ -341,8 +233,9 @@ const Home = ({ data, dataselect }) => {
 }
 
 
-
 export const getServerSideProps = async (ctx) => {
+
+
 
 
   const serchkeyword = ctx.query.keyword
@@ -409,14 +302,7 @@ export const getServerSideProps = async (ctx) => {
 
   } else {
 
-    // let defresp = await fetch(`${url.orig}/2.0/oauth2/password/?login=${auth2.login}&password=${auth2.password}&client_id=${auth2.client_id}&client_secret=${auth2.client_secret}`, optionsLogin)
-    // let defrespdata = await defresp.json()
-    // nookies.set(ctx, 'cookaccess', `${defrespdata.access_token}`, {
-    //   path: '/',
-    // })
-    // nookies.set(ctx, 'cookttl', `${defrespdata.ttl}`, {
-    //   path: '/',
-    // })
+
 
     let defresp2 = await axios.get(`${url.orig}/2.0/oauth2/password/?login=${auth2.login}&password=${auth2.password}&client_id=${auth2.client_id}&client_secret=${auth2.client_secret}`, optionsLogin)
     let defrespdata2 = defresp2.data
@@ -435,12 +321,7 @@ export const getServerSideProps = async (ctx) => {
 
   if (optionsAccess.headers.Authorization.length > 20 && serchkeyword !== undefined) {
 
-    // axios.interceptors.request.use((config) => {
-    //   console.log('Sending Request:', config);
-    //   return config;
-    // }, (error) => {
-    //   return Promise.reject(error)
-    // })
+
 
     const [responseax, responseax2] = await Promise.all([
       axios.get(`${url.orig}/2.0/vacancies/?count=100/&published=1&keyword=${serchkeyword}&catalogues=${datafilter}&payment_from=${dataFilterPaymentFrom}&payment_to=${dataFilterPaymentTo}&no_agreement=1`, optionsAccess),
@@ -449,10 +330,7 @@ export const getServerSideProps = async (ctx) => {
     ])
 
 
-    // const responseax = await axios.get(`${url.orig}/2.0/vacancies/?count=100/&published=1&keyword=${serchkeyword}&catalogues=${datafilter}&payment_from=${dataFilterPaymentFrom}&payment_to=${dataFilterPaymentTo}&no_agreement=1`, optionsAccess)
-    // const dataax = await responseax.data
-    // const response2ax = await axios.get(`${url.orig}/2.0/catalogues/`, optionsAccess)
-    // const dataselectax = await response2ax.data
+
     return {
       props: {
         data: responseax.data,
@@ -461,17 +339,6 @@ export const getServerSideProps = async (ctx) => {
 
     }
 
-    // const response = await fetch(`${url.orig}/2.0/vacancies/?count=100/&published=1&keyword=${serchkeyword}&catalogues=${datafilter}&payment_from=${dataFilterPaymentFrom}&payment_to=${dataFilterPaymentTo}&no_agreement=1`, optionsAccess)
-    // const data = await response.json();
-    // const response2 = await fetch(`${url.orig}/2.0/catalogues/`, optionsAccess)
-    // const dataselect = await response2.json()
-    // return {
-    //   props: {
-    //     data,
-    //     dataselect,
-    //   },
-
-    // }
 
   } else {
     try {
@@ -479,10 +346,7 @@ export const getServerSideProps = async (ctx) => {
         axios.get(`${url.orig}/2.0/vacancies/?count=100/`, optionsLogin),
         axios.get(`${url.orig}/2.0/catalogues/`, optionsLogin)
       ])
-      // const responseax = await axios.get(`${url.orig}/2.0/vacancies/?count=100/`, optionsLogin);
-      // const dataax = await responseax.data
-      // const responseax3 = await axios.get(`${url.orig}/2.0/catalogues/`, optionsLogin);
-      // const dataselectax = await responseax3.data
+
       return {
         props: {
           data: responseax.data,
@@ -498,23 +362,6 @@ export const getServerSideProps = async (ctx) => {
 
       }
     }
-
-
-
-    // const response = await fetch(`${url.orig}/2.0/vacancies/?count=100/`, optionsLogin)
-    // const data = await response.json();
-    // const response2 = await fetch(`${url.orig}/2.0/catalogues/`, optionsLogin)
-    // const dataselect = await response2.json()
-    // return {
-    //   props: {
-    //     data,
-    //     dataselect,
-
-    //   }
-
-    // }
-
-
 
   }
 
