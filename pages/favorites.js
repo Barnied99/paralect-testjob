@@ -6,7 +6,6 @@ import stylesf from "../styles/Footer.module.css"
 import Favoritesdata from "@/components/favoritesdata";
 
 
-
 const Favorites = () => {
 
 
@@ -82,6 +81,8 @@ const Favorites = () => {
                 <div className={styles.flex_container}>
                     <div className={styles.container}>
                         <Favoritesdata datase={datase} starClickFav={starClickFav} local={local} fixpaymentto={fixpaymentto} fixpaymentfrom={fixpaymentfrom} fixpayderk={fixpayderk} />
+
+
                     </div>
                 </div>
             </article>
