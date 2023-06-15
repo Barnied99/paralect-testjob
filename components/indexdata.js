@@ -11,6 +11,12 @@ import styles from "../styles/Footer.module.css"
 
 const IndexData = (props) => {
 
+    const chu = (elem) => props.local.find((el) => {
+
+        if (elem === el.id) {
+            return el.id
+        }
+    })
     return (
         <>
             <ScrollArea h={580} type="never"  >
@@ -24,7 +30,7 @@ const IndexData = (props) => {
 
 
                                     <Button radius="md" variant="subtle" value={el.id} onClick={(e) => props.starClick(e, el)} >
-                                        {props.local.includes(el) ? <FavButtondel el={el.id} /> : <FavButtonadd el={el.id} />
+                                        {chu(el.id) !== undefined ? <FavButtondel el={el.id} /> : <FavButtonadd el={el.id} />
                                         }
 
                                     </Button>
