@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import { Button, TextInput, Pagination } from "@mantine/core";
 import styles from "../styles/Footer.module.css"
 import { IconSearch } from "@tabler/icons-react";
-// import NodeCache from 'node-cache';
+import NodeCache from 'node-cache';
 import nookies from 'nookies'
 import axios from 'axios';
 import Filter from "@/components/filter";
@@ -16,26 +16,6 @@ const Home = ({ data, dataselect }) => {
   const [star, setStar] = useState([]);
   const [local, setLocal] = useState(typeof window !== 'undefined' && localStorage.getItem('data') ?
     JSON.parse(localStorage.getItem('data')) : []);
-
-  // const delay = [34528035, 34598541]
-
-  // const chu = (delay) => local.map((el) => {
-
-  //   return delay.map((elem) => {
-  //     return elem == el.id ? 'true' : 'false'
-  //   })
-  // })
-  // const chu = (elem) => local.find((el) => {
-
-  //   if (elem === el.id) {
-  //     return el.id
-  //   }
-  // })
-
-
-  // console.log(local)
-  // console.log(star)
-  // console.log(chu(34528035) !== undefined)
 
 
   useEffect(() => {
@@ -244,7 +224,7 @@ const Home = ({ data, dataselect }) => {
   )
 }
 
-// const cache = new NodeCache({ stdTTL: 60, checkperiod: 120 });
+const cache = new NodeCache({ stdTTL: 600, checkperiod: 120 });
 
 export const getServerSideProps = async (ctx) => {
 
@@ -299,24 +279,18 @@ export const getServerSideProps = async (ctx) => {
   const dataFilterPaymentFrom = ctx.query.payment_from
   const dataFilterPaymentTo = ctx.query.payment_to
 
-  // const cacheserchkeyword = `${serchkeyword}`;
-  // const cacheserchkeyword1 = `${datafilter}`;
-  // let cacheserchkeyword = ''
-  // let cacheserchkeyword1 = ''
-  // const cachedataFilterPaymentFrom = `${dataFilterPaymentFrom}`;
-  // const cachedataFilterPaymentTo = `${dataFilterPaymentTo}`;
-  // const cachekeyd = cache.get(cacheserchkeyword)
 
-  // const cachekeyd2 = cache.get(cacheserchkeyword1)
-  //  && cache.get(cachedatafilter) && cache.get(achedataFilterPaymentFrom) && cache.get(cachedataFilterPaymentTo);
-  // if (cachekeyd) {
-  //   return {
-  //     props: {
-  //       data: cachekeyd,
-  //       dataselect: cachekeyd2,
-  //     }
-  //   }
-  // }
+  // cache
+  const cachekeyd = cache.get('cacheserchkeyword')
+  const cachekeyd2 = cache.get('cacheserchkeyword1')
+  if (cachekeyd) {
+    return {
+      props: {
+        data: cachekeyd,
+        dataselect: cachekeyd2,
+      }
+    }
+  }
 
 
 
@@ -349,11 +323,9 @@ export const getServerSideProps = async (ctx) => {
 
       axios.get(`${url.orig}/2.0/catalogues/`, optionsAccess)
     ])
-    // cache.set(cacheserchkeyword, responseax.data)
-    // cache.set(cacheserchkeyword1, responseax2.data)
-    // cache.set(cachedatafilter, responseax.data)
-    // cache.set(cachedataFilterPaymentFrom, responseax.data)
-    // cache.set(cachedataFilterPaymentTo, responseax.data)
+    cache.set('cacheserchkeyword', responseax.data)
+    cache.set('cacheserchkeyword1', responseax2.data)
+
 
 
     return {
@@ -369,8 +341,8 @@ export const getServerSideProps = async (ctx) => {
       axios.get(`${url.orig}/2.0/vacancies/?count=100/`, optionsLogin),
       axios.get(`${url.orig}/2.0/catalogues/`, optionsLogin)
     ])
-    // cache.set(cacheserchkeyword, responseax.data)
-    // cache.set(cacheserchkeyword1, responseax2.data)
+    // cache.set('cacheserchkeyword', responseax.data)
+    // cache.set('cacheserchkeyword1', responseax2.data)
     return {
       props: {
         data: responseax.data,
