@@ -1,4 +1,4 @@
-import styles from "../styles/favorites.module.css"
+import styles from "../styles/favorites.module.scss"
 import Link from "next/link";
 import Image from "next/image";
 import { Text, Button } from "@mantine/core";

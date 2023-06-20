@@ -2,7 +2,7 @@ import Head from "next/head"
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { Button, TextInput, Pagination } from "@mantine/core";
-import styles from "../styles/Footer.module.css"
+import styles from "../styles/Footer.module.scss"
 import { IconSearch } from "@tabler/icons-react";
 import NodeCache from 'node-cache';
 import nookies from 'nookies'
@@ -10,7 +10,9 @@ import axios from 'axios';
 import Filter from "@/components/filter";
 import IndexData from "@/components/indexdata";
 
+
 const Home = ({ data, dataselect }) => {
+
 
   // избранное
   const [star, setStar] = useState([]);
@@ -29,11 +31,11 @@ const Home = ({ data, dataselect }) => {
     event.preventDefault();
 
     if (local.find((e) => e.id == el.id)) {
-      // setStar(star.filter((elem) => elem !== el));
+      setStar(star.filter((elem) => elem !== el));
       setLocal(local.filter((elem) => elem.id !== el.id));
 
     } else {
-      // setStar([...star, el]);
+      setStar([...star, el]);
       setLocal([...local, el]);
     }
   };
@@ -83,7 +85,6 @@ const Home = ({ data, dataselect }) => {
   }, []);
 
 
-
   const [value, setValue] = useState([]);
   function handlesetSelect(val) {
     setSelect(val)
@@ -109,7 +110,7 @@ const Home = ({ data, dataselect }) => {
 
     if (selectData || value) {
       return router.push({
-        query: `keyword=${value}&catalogues=${selectDataId}&payment_from=${numberdatafrom}&payment_to=${numberdatabefore || numberdatafrom}`
+        query: `&published=1/keyword=${value}&catalogues=${selectDataId}&payment_from=${numberdatafrom}&payment_to=${numberdatabefore || numberdatafrom}`
       })
     }
 
@@ -151,7 +152,7 @@ const Home = ({ data, dataselect }) => {
     e.preventDefault();
     if (value || selectData) {
       return router.push({
-        query: `catalogues=${selectDataId}&keyword=${value}`
+        query: `&published=1/catalogues=${selectDataId}&keyword=${value}`
       })
     }
 
@@ -224,9 +225,10 @@ const Home = ({ data, dataselect }) => {
   )
 }
 
-const cache = new NodeCache({ stdTTL: 600, checkperiod: 120 });
+const cache = new NodeCache({ stdTTL: 6, checkperiod: 120 });
 
 export const getServerSideProps = async (ctx) => {
+
 
 
   const url = {
@@ -278,7 +280,6 @@ export const getServerSideProps = async (ctx) => {
   const datafilter = ctx.query.catalogues
   const dataFilterPaymentFrom = ctx.query.payment_from
   const dataFilterPaymentTo = ctx.query.payment_to
-
 
   // cache
   const cachekeyd = cache.get('cacheserchkeyword')
@@ -336,13 +337,14 @@ export const getServerSideProps = async (ctx) => {
 
     }
 
-  } else {
+  }
+  else {
     const [responseax, responseax2] = await Promise.all([
-      axios.get(`${url.orig}/2.0/vacancies/?count=100/`, optionsLogin),
+      axios.get(`${url.orig}/2.0/vacancies/?count=100/&published=1/&catalogues=${datafilter}&payment_from=${dataFilterPaymentFrom}&payment_to=${dataFilterPaymentTo}&no_agreement=1`, optionsLogin),
       axios.get(`${url.orig}/2.0/catalogues/`, optionsLogin)
     ])
-    // cache.set('cacheserchkeyword', responseax.data)
-    // cache.set('cacheserchkeyword1', responseax2.data)
+    cache.set('cacheserchkeyword', responseax.data)
+    cache.set('cacheserchkeyword1', responseax2.data)
     return {
       props: {
         data: responseax.data,
@@ -356,4 +358,4 @@ export const getServerSideProps = async (ctx) => {
 
 }
 
-export default Home 
+export default Home

@@ -4,7 +4,7 @@ import FavButtondel from "@/components/favbuttondel";
 import { Text, Button } from "@mantine/core";
 import { IconMapPin } from "@tabler/icons-react";
 import Link from "next/link";
-import styles from "../styles/favorites.module.css"
+import styles from "../styles/favorites.module.scss"
 import { v4 as uuidv4 } from 'uuid'
 
 

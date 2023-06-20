@@ -1,4 +1,4 @@
-import styles from "../styles/Vacancies.module.css"
+import styles from "../styles/Vacancies.module.scss"
 import { v4 as uuidv4 } from 'uuid'
 import parse from 'html-react-parser';
 import { Text } from "@mantine/core";
