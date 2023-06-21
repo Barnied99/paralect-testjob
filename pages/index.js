@@ -2,7 +2,7 @@ import Head from "next/head"
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { Button, TextInput, Pagination } from "@mantine/core";
-import styles from "../styles/Footer.module.scss"
+import styles from "../styles/Footer.module.css"
 import { IconSearch } from "@tabler/icons-react";
 import NodeCache from 'node-cache';
 import nookies from 'nookies'

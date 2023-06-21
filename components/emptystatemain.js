@@ -1,4 +1,4 @@
-import styles from "../styles/favorites.module.scss"
+import styles from "../styles/favorites.module.css"
 import Image from "next/image";
 
 

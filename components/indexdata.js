@@ -5,7 +5,7 @@ import { IconMapPin } from "@tabler/icons-react";
 import FavButtonadd from "@/components/favbuttonadd";
 import FavButtondel from "@/components/favbuttondel";
 import EmptystateMain from "@/components/emptystatemain";
-import styles from "../styles/Footer.module.scss"
+import styles from "../styles/Footer.module.css"
 
 
 

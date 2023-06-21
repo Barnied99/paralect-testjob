@@ -1,8 +1,8 @@
 import Head from "next/head"
-import styles from "../styles/favorites.module.scss"
+import styles from "../styles/favorites.module.css"
 import { useState, useEffect } from "react";
 import { Pagination } from "@mantine/core";
-import stylesf from "../styles/Footer.module.scss"
+import stylesf from "../styles/Footer.module.css"
 import Favoritesdata from "@/components/favoritesdata";
 
 

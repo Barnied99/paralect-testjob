@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import styles from "../styles/Navbar.module.scss"
+import styles from "../styles/Navbar.module.css"
 import { Text } from "@mantine/core";
 import { useRouter } from "next/router";
 
