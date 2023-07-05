@@ -8,40 +8,35 @@ import EmptystateMain from "@/components/emptystatemain";
 import styles from "../styles/Footer.module.css"
 
 
+const IndexData = ({ local, datas, starClick, fixpaymentfrom, fixpayderk, fixpaymentto }) => {
 
-const IndexData = (props) => {
-
-    const chu = (elem) => props.local.find((el) => {
+    const chu = (elem) => local.find((el) => {
 
         if (elem === el.id) {
             return el.id
         }
     })
+
     return (
         <>
             <ScrollArea h={580} type="never"  >
                 <Flex gap="md"
                     direction="column">
                     {
-                        props.datas.length !== 0 ? props.datas.map((el) => (
+                        datas.length !== 0 ? datas.map((el) => (
                             <Link className="main_info_item" key={uuidv4()} href={`/${el.id}`} data-elem={`vacancy-${el.id}`}  >
                                 <div className="main_info_item1"  >
                                     <Text fz="lg" c="#5E96FC" key={uuidv4()}>{el.profession}</Text>
-
-
-                                    <Button radius="md" variant="subtle" value={el.id} onClick={(e) => props.starClick(e, el)} >
+                                    <Button radius="md" variant="subtle" value={el.id} onClick={(e) => starClick(e, el)} >
                                         {chu(el.id) !== undefined ? <FavButtondel el={el.id} /> : <FavButtonadd el={el.id} />
                                         }
 
                                     </Button>
-
-
                                 </div>
-
                                 <div className="content">
-                                    <Text fw={600} key={uuidv4()} c="#232134" >з/п {props.fixpaymentfrom(el.payment_from)}</Text>
-                                    {props.fixpayderk(el.payment_from, el.payment_to)}
-                                    <Text fw={600} key={uuidv4()} c="#232134" > {props.fixpaymentto(el.payment_to)}</Text>
+                                    <Text fw={600} key={uuidv4()} c="#232134" >з/п {fixpaymentfrom(el.payment_from)}</Text>
+                                    {fixpayderk(el.payment_from, el.payment_to)}
+                                    <Text fw={600} key={uuidv4()} c="#232134" > {fixpaymentto(el.payment_to)}</Text>
                                     <Text fw={600} key={uuidv4()} c="#232134" >{el.currency}</Text> •
                                     <Text key={uuidv4()} className="text">{el.type_of_work.title}</Text>
                                 </div>

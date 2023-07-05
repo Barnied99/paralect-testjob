@@ -1,10 +1,10 @@
 import Image from "next/image";
 
-const FavButtondel = ({ el }) => {
+const FavButtondel = () => {
 
     return (
-        <div data-elem={`vacancy-${el}-shortlist-button`}>
-            <Image src="Star2.svg" width={20} height={20} alt='star2' data-elem={`vacancy-${el}-shortlist-button`} />
+        <div  >
+            <Image src="Star2.svg" width={20} height={20} alt='star2' suppressHydrationWarning={true} />
         </div>
 
     )

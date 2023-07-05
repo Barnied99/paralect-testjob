@@ -6,8 +6,6 @@ import axios from 'axios';
 
 const Vacancies = ({ data }) => {
     const router = useRouter()
-    const { id } = router.query
-    const datas = data
 
 
     return (
@@ -15,7 +13,7 @@ const Vacancies = ({ data }) => {
             <Head>
                 <title>Вакансия</title>
             </Head>
-            <VacanciesInfo data={datas} />
+            <VacanciesInfo data={data} />
         </>
     )
 }

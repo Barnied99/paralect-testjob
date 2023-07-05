@@ -1,5 +1,5 @@
 import Head from "next/head"
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useRouter } from "next/router";
 import { Button, TextInput, Pagination } from "@mantine/core";
 import styles from "../styles/Footer.module.css"
@@ -12,6 +12,10 @@ import IndexData from "@/components/indexdata";
 
 
 const Home = ({ data, dataselect }) => {
+
+  const inputRef = useRef(null);
+
+
 
 
   // избранное
@@ -26,39 +30,38 @@ const Home = ({ data, dataselect }) => {
   }, [local]);
 
 
-
-  const starClick = (event, el) => {
+  // добавление избранного
+  const starClick = (event, starfav) => {
     event.preventDefault();
 
-    if (local.find((e) => e.id == el.id)) {
-      setStar(star.filter((elem) => elem !== el));
-      setLocal(local.filter((elem) => elem.id !== el.id));
+    if (local.find((e) => e.id == starfav.id)) {
+      setStar(star.filter((elem) => elem !== starfav));
+      setLocal(local.filter((elem) => elem.id !== starfav.id));
 
     } else {
-      setStar([...star, el]);
-      setLocal([...local, el]);
+      setStar([...star, starfav]);
+      setLocal([...local, starfav]);
     }
-  };
+  }
 
-
-  const fixpaymentto = (el) => {
-
+  // филтрация отображения данных
+  const fixPaymentTo = (el) => {
     return el == 0 ? '' : `до ${el} `
   };
 
-  const fixpaymentfrom = (el) => {
+  const fixPaymentFrom = (el) => {
     return el == 0 ? '' : `от ${el}`
   };
 
-  const fixpayderk = (a, b) => {
+  const fixDash = (a, b) => {
     if (a && b) {
       return '-'
     }
   }
 
 
-  //catalogues=number 
-  function getKeyByValue(obj, value) {
+  //каталоги вакансий 
+  const getKeyByValue = (obj, value) => {
     for (let key in obj) {
       if (obj[key] === value) {
         return key;
@@ -66,7 +69,7 @@ const Home = ({ data, dataselect }) => {
     }
   };
 
-  // reset
+  // сброс селекта
   const resetButton = () => {
     setNumberDataFrom(0)
     setNumberDataBefore(0)
@@ -76,21 +79,28 @@ const Home = ({ data, dataselect }) => {
 
 
   // поиск отрасли
-
-  const masselectTitle = dataselect.reduce((acc, el, i) => {
+  const dataSelect = dataselect.reduce((acc, el, i) => {
     return {
       ...acc,
       [el.key]: el.title.split(',')[0]
     }
-  }, []);
-
+  }, {});
 
   const [value, setValue] = useState([]);
-  function handlesetSelect(val) {
+
+
+  const setValues = useCallback((e) => {
+    setValue(e)
+    inputRef.current.focus();
+
+  }, [value])
+
+
+  const handlesetSelect = (val) => {
     setSelect(val)
     const strvalue = val.toString()
 
-    const getstrvalue = val.map((el) => getKeyByValue(masselectTitle, el))
+    const getstrvalue = val.map((el) => getKeyByValue(dataSelect, el))
     setSelectId(getstrvalue)
   }
   const [selectData, setSelect] = useState([]);
@@ -125,6 +135,8 @@ const Home = ({ data, dataselect }) => {
 
 
 
+
+
   const [currentPage, setCurrentPage] = useState(1);
   const pagesizemain = 20
 
@@ -139,6 +151,7 @@ const Home = ({ data, dataselect }) => {
     const startIndex = (currentPage - 1) * pagesizemain;
     return items.slice(startIndex, startIndex + pagesizemain);
   };
+
 
   const datas = paginate(items, currentPage, pagesizemain)
 
@@ -174,7 +187,7 @@ const Home = ({ data, dataselect }) => {
           <div className="flex_main">
             <aside>
               <div className="baraside">
-                <Filter resetButton={resetButton} submitFilter={submitFilter} masselectTitle={masselectTitle} selectData={selectData} handlesetSelect={handlesetSelect} numberdatafrom={numberdatafrom} setNumberDataFrom={setNumberDataFrom} numberdatabefore={numberdatabefore} setNumberDataBefore={setNumberDataBefore} />
+                <Filter resetButton={resetButton} submitFilter={submitFilter} dataSelect={dataSelect} selectData={selectData} handlesetSelect={handlesetSelect} numberdatafrom={numberdatafrom} setNumberDataFrom={setNumberDataFrom} numberdatabefore={numberdatabefore} setNumberDataBefore={setNumberDataBefore} />
               </div>
             </aside>
             <div className="main_info">
@@ -182,11 +195,12 @@ const Home = ({ data, dataselect }) => {
               <div className="main_search">
                 <form onSubmit={submitHandler}>
                   <TextInput
+                    ref={inputRef}
                     data-elem='search-input'
                     placeholder="Введите название вакансии" icon={<IconSearch size="0.8rem" />}
                     size="md"
                     value={value}
-                    onChange={(event) => setValue(event.currentTarget.value)}
+                    onChange={(event) => setValues(event.currentTarget.value)}
                     radius="md"
                     border-color="#EAEBED"
                     rightSection={
@@ -201,7 +215,7 @@ const Home = ({ data, dataselect }) => {
               </div>
 
               <div className="container" >
-                <IndexData datas={datas} starClick={starClick} local={local} fixpaymentfrom={fixpaymentfrom} fixpayderk={fixpayderk} fixpaymentto={fixpaymentto} />
+                <IndexData datas={datas} starClick={starClick} local={local} fixpaymentfrom={fixPaymentFrom} fixpayderk={fixDash} fixpaymentto={fixPaymentTo} />
 
               </div>
             </div>
@@ -225,7 +239,7 @@ const Home = ({ data, dataselect }) => {
   )
 }
 
-const cache = new NodeCache({ stdTTL: 6, checkperiod: 120 });
+const cache = new NodeCache({ stdTTL: 6, checkperiod: 180 });
 
 export const getServerSideProps = async (ctx) => {
 
@@ -238,12 +252,12 @@ export const getServerSideProps = async (ctx) => {
   }
 
 
-  const auth = {
-    login: 'sergei.stralenia@gmail.com',
-    password: 'paralect123',
-    client_id: '2356',
-    client_secret: 'v3.r.137440105.ffdbab114f92b821eac4e21f485343924a773131.06c3bdbb8446aeb91c35b80c42ff69eb9c457948'
-  }
+  // const auth = {
+  //   login: 'sergei.stralenia@gmail.com',
+  //   password: 'paralect123',
+  //   client_id: '2356',
+  //   client_secret: 'v3.r.137440105.ffdbab114f92b821eac4e21f485343924a773131.06c3bdbb8446aeb91c35b80c42ff69eb9c457948'
+  // }
 
   const auth2 = {
     login: 'darkbarnied99@gmail.com',

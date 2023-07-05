@@ -2,7 +2,7 @@ import { Text, Button, Flex, MultiSelect, NumberInput } from "@mantine/core";
 import { IconChevronDown } from '@tabler/icons-react';
 
 
-const Filter = (props) => {
+const Filter = ({ resetButton, submitFilter, dataSelect, selectData, handlesetSelect, numberdatafrom, setNumberDataFrom, numberdatabefore, setNumberDataBefore }) => {
 
 
 
@@ -12,7 +12,7 @@ const Filter = (props) => {
                 <div className="fil">
                     <Text fw={600} size={20} style={{ minWidth: '93px' }}>Фильтр</Text>
                     <Button
-                        onClick={props.resetButton}
+                        onClick={resetButton}
                         size={'sm'}
                         variant="subtle"
                         c="#ACADB9"
@@ -20,7 +20,7 @@ const Filter = (props) => {
                     </Button>
                 </div>
 
-                <form onSubmit={props.submitFilter}
+                <form onSubmit={submitFilter}
                 >
                     <div className="otrasl">
                         <Text fw={600} size={16} style={{ maxWidth: '70px' }}>Отрасль</Text>
@@ -28,13 +28,12 @@ const Filter = (props) => {
                             data-elem='industry-select'
                             placeholder="введите отрасль"
                             styles={{ rightSection: { pointerEvents: 'none' } }}
-
                             rightSection={<IconChevronDown
                                 size="1rem" />}
                             rightSectionWidth={40}
-                            data={Object.values(props.masselectTitle)}
-                            value={props.selectData}
-                            onChange={(value) => props.handlesetSelect(value)}
+                            data={Object.values(dataSelect)}
+                            value={selectData}
+                            onChange={(value) => handlesetSelect(value)}
                             maxDropdownHeight={150}
                         />
                     </div>
@@ -49,12 +48,11 @@ const Filter = (props) => {
                                 data-elem='salary-from-input'
                                 precision={0}
                                 min={0}
-
                                 step={1000}
                                 max={100000000}
                                 placeholder="От"
-                                value={props.numberdatafrom}
-                                onChange={props.setNumberDataFrom}
+                                value={numberdatafrom}
+                                onChange={setNumberDataFrom}
                             />
                             <NumberInput
                                 precision={0}
@@ -64,8 +62,8 @@ const Filter = (props) => {
                                 step={1000}
                                 max={100000000}
                                 placeholder="До"
-                                value={props.numberdatabefore}
-                                onChange={props.setNumberDataBefore}
+                                value={numberdatabefore}
+                                onChange={setNumberDataBefore}
                             />
                         </Flex>
 

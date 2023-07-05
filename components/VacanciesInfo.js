@@ -7,10 +7,10 @@ import { IconMapPin } from "@tabler/icons-react";
 
 
 
-const VacanciesInfo = (data) => {
+const VacanciesInfo = ({ data }) => {
 
 
-    const datas = Array(data.data)
+    const datas = Array(data)
 
     const fixpayderk = (a, b) => {
         if (a && b) {
@@ -26,7 +26,6 @@ const VacanciesInfo = (data) => {
     }
     return (
         <>
-
             <div className={styles.content2}>
                 <article>
                     <div className={styles.vacancies}>
