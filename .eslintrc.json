@@ -3,9 +3,5 @@
     "next/core-web-vitals",
     "plugin:react-hooks/recommended",
     "plugin:jsx-a11y/recommended"
-  ],
-  "env": {
-    "browser": true,
-    "es6": true
-  }
+  ]
 }
