@@ -15,9 +15,6 @@ const Home = ({ data, dataselect }) => {
 
   const inputRef = useRef(null);
 
-
-
-
   // избранное
   const [star, setStar] = useState([]);
   const [local, setLocal] = useState(typeof window !== 'undefined' && localStorage.getItem('data') ?
@@ -98,7 +95,7 @@ const Home = ({ data, dataselect }) => {
 
   const handlesetSelect = (val) => {
     setSelect(val)
-    const strvalue = val.toString()
+    // const strvalue = val.toString()
 
     const getstrvalue = val.map((el) => getKeyByValue(dataSelect, el))
     setSelectId(getstrvalue)
@@ -126,16 +123,8 @@ const Home = ({ data, dataselect }) => {
 
   }
 
-
-
-
-
   // пагинация
   const items = data.objects
-
-
-
-
 
   const [currentPage, setCurrentPage] = useState(1);
   const pagesizemain = 20
@@ -143,8 +132,6 @@ const Home = ({ data, dataselect }) => {
   const onPageChange = (page) => {
     setCurrentPage(page);
   };
-
-
 
 
   const paginate = (items, currentPage, pagesizemain) => {
@@ -251,13 +238,6 @@ export const getServerSideProps = async (ctx) => {
     orig: 'https://api.superjob.ru',
   }
 
-
-  // const auth = {
-  //   login: 'sergei.stralenia@gmail.com',
-  //   password: 'paralect123',
-  //   client_id: '2356',
-  //   client_secret: 'v3.r.137440105.ffdbab114f92b821eac4e21f485343924a773131.06c3bdbb8446aeb91c35b80c42ff69eb9c457948'
-  // }
 
   const auth2 = {
     login: 'darkbarnied99@gmail.com',
