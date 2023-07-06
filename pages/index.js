@@ -16,6 +16,8 @@ const Home = ({ data, dataselect }) => {
   const inputRef = useRef(null);
 
 
+
+
   // избранное
   const [star, setStar] = useState([]);
   const [local, setLocal] = useState(typeof window !== 'undefined' && localStorage.getItem('data') ?
