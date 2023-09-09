@@ -20,8 +20,7 @@ const Filter = ({ resetButton, submitFilter, dataSelect, selectData, handlesetSe
                     </Button>
                 </div>
 
-                <form onSubmit={submitFilter}
-                >
+                <form onSubmit={submitFilter}>
                     <div className="otrasl">
                         <Text fw={600} size={16} style={{ maxWidth: '70px' }}>Отрасль</Text>
                         <MultiSelect

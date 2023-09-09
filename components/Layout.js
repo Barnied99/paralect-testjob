@@ -1,10 +1,6 @@
 import Header from "./Header";
 
 const Layout = ({ children, ...pageProps }) => {
-
-
-
-
     return (
         <>
             <div className="root">
