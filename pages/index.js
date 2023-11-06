@@ -83,7 +83,8 @@ const Home = ({ data, dataselect }) => {
       [el.key]: el.title.split(',')[0]
     }
   }, {});
-
+  console.log(dataSelect);
+  console.log(dataselect);
   const [value, setValue] = useState([]);
 
 
@@ -169,7 +170,6 @@ const Home = ({ data, dataselect }) => {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
 
       </Head>
-
       <article>
         <div className="article_main">
           <div className="flex_main">
@@ -209,7 +209,6 @@ const Home = ({ data, dataselect }) => {
             </div>
 
           </div>
-
         </div>
       </article>
 
@@ -261,6 +260,7 @@ export const getServerSideProps = async (ctx) => {
   const optionsAccess = {
     method: 'Get',
     mode: 'cors',
+    credentials: "same-origin",
     headers: {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
@@ -348,8 +348,6 @@ export const getServerSideProps = async (ctx) => {
 
     }
   }
-
-
 }
 
 export default Home

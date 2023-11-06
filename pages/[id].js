@@ -5,9 +5,10 @@ import nookies from 'nookies'
 import axios from 'axios';
 
 const Vacancies = ({ data }) => {
+
     const router = useRouter()
-
-
+    const { id } = router.query
+    console.log(id);
     return (
         <>
             <Head>
@@ -28,7 +29,7 @@ export const getServerSideProps = async (ctx) => {
     const response = await axios.get(`https://api.superjob.ru/2.0/vacancies/${serchkeyword1}`, {
         method: 'Get',
         mode: 'cors',
-        credentials: "include",
+        credentials: "same-origin",
 
         headers: {
             'Accept': 'application/json',

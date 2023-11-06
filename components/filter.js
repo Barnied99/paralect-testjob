@@ -2,9 +2,9 @@ import { Text, Button, Flex, MultiSelect, NumberInput } from "@mantine/core";
 import { IconChevronDown } from '@tabler/icons-react';
 
 
-const Filter = ({ resetButton, submitFilter, dataSelect, selectData, handlesetSelect, numberdatafrom, setNumberDataFrom, numberdatabefore, setNumberDataBefore }) => {
-
-
+const Filter = ({ resetButton, submitFilter, dataSelect,
+    selectData, handlesetSelect, numberdatafrom,
+    setNumberDataFrom, numberdatabefore, setNumberDataBefore }) => {
 
     return (
         <>
@@ -19,7 +19,6 @@ const Filter = ({ resetButton, submitFilter, dataSelect, selectData, handlesetSe
                         compact><Text fw={450}>Сбросить все x</Text>
                     </Button>
                 </div>
-
                 <form onSubmit={submitFilter}>
                     <div className="otrasl">
                         <Text fw={600} size={16} style={{ maxWidth: '70px' }}>Отрасль</Text>

@@ -86,7 +86,6 @@ const Favorites = () => {
                     </div>
                 </div>
             </article>
-
             <footer>
                 <div className={stylesf.foot}>
                     <Pagination
@@ -98,11 +97,7 @@ const Favorites = () => {
                     />
                 </div>
             </footer>
-
-
         </>
-
-
     )
 
 }
