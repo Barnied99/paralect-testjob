@@ -1,3 +1,45 @@
+// {
+//   "extends": [
+//     "next/core-web-vitals"
+//   ]
+// }
 {
-  "extends": "next/core-web-vitals"
+  "env": {
+    "browser": true,
+    "commonjs": true,
+    "es2021": true
+  },
+  "extends": [
+    "react-app",
+    "react-app/jest",
+    "next/core-web-vitals"
+  ],
+  "parserOptions": {
+    "ecmaVersion": "latest"
+  },
+  "plugins": [
+    "react"
+  ],
+  "rules": {
+    "no-console": "warn",
+    "import/prefer-default-export": "off",
+    "react/jsx-no-useless-fragment": "warn",
+    "no-unused-vars": "warn",
+    "import/order": [
+      "warn",
+      {
+        "groups": [
+          "builtin",
+          "external",
+          "internal",
+          "parent",
+          "sibling",
+          "index",
+          "object",
+          "type"
+        ],
+        "newlines-between": "always"
+      }
+    ]
+  }
 }

@@ -13,6 +13,7 @@ import IndexData from "@/components/indexdata";
 
 const Home = ({ data, dataselect }) => {
 
+
   const inputRef = useRef(null);
 
   // избранное
@@ -21,11 +22,11 @@ const Home = ({ data, dataselect }) => {
     JSON.parse(localStorage.getItem('data')) : []);
 
 
+
   useEffect(() => {
     typeof window !== 'undefined' ? window.localStorage.setItem('data', JSON.stringify(local)) : []
 
   }, [local]);
-
 
   // добавление избранного
   const starClick = (event, starfav) => {
@@ -82,7 +83,8 @@ const Home = ({ data, dataselect }) => {
       [el.key]: el.title.split(',')[0]
     }
   }, {});
-
+  console.log(dataSelect);
+  console.log(dataselect);
   const [value, setValue] = useState([]);
 
 
@@ -95,6 +97,7 @@ const Home = ({ data, dataselect }) => {
 
   const handlesetSelect = (val) => {
     setSelect(val)
+    console.log(val);
     // const strvalue = val.toString()
 
     const getstrvalue = val.map((el) => getKeyByValue(dataSelect, el))
@@ -141,7 +144,6 @@ const Home = ({ data, dataselect }) => {
 
 
   const datas = paginate(items, currentPage, pagesizemain)
-
   // 
 
   // поисковик 
@@ -168,7 +170,6 @@ const Home = ({ data, dataselect }) => {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
 
       </Head>
-
       <article>
         <div className="article_main">
           <div className="flex_main">
@@ -208,7 +209,6 @@ const Home = ({ data, dataselect }) => {
             </div>
 
           </div>
-
         </div>
       </article>
 
@@ -229,7 +229,6 @@ const Home = ({ data, dataselect }) => {
 const cache = new NodeCache({ stdTTL: 6, checkperiod: 180 });
 
 export const getServerSideProps = async (ctx) => {
-
 
 
   const url = {
@@ -261,6 +260,7 @@ export const getServerSideProps = async (ctx) => {
   const optionsAccess = {
     method: 'Get',
     mode: 'cors',
+    credentials: "same-origin",
     headers: {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
@@ -348,8 +348,6 @@ export const getServerSideProps = async (ctx) => {
 
     }
   }
-
-
 }
 
 export default Home
